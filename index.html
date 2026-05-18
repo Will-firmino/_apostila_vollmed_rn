@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apostila — App Voll em React Native com Expo</title>
+  <style>
+    /* ── Reset e base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-dark:  #0B3B60;
+      --blue-light: #2196F3;
+      --bg:         #f8f9fb;
+      --surface:    #ffffff;
+      --border:     #e2e8f0;
+      --text:       #1e2a38;
+      --muted:      #64748b;
+      --code-bg:    #0f1723;
+      --code-text:  #e2e8f0;
+      --green:      #22c55e;
+      --red:        #ef4444;
+      --yellow:     #f59e0b;
+      --purple:     #a855f7;
+      --sidebar-w:  270px;
+      --radius:     10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── Layout ── */
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--blue-dark);
+      color: #cbd5e1;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      overflow-y: auto;
+      padding: 24px 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 20px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 16px;
+    }
+    .sidebar-logo .icon {
+      width: 32px; height: 32px;
+      background: var(--blue-light);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; color: #fff;
+    }
+    .sidebar-logo span { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; }
+
+    .sidebar nav a {
+      display: block;
+      padding: 7px 20px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 13px;
+      border-left: 3px solid transparent;
+      transition: all .18s;
+    }
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+      border-left-color: var(--blue-light);
+    }
+    .sidebar nav .section-title {
+      padding: 14px 20px 4px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #475569;
+      font-weight: 700;
+    }
+
+    /* ── Main ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      max-width: 900px;
+      padding: 48px 48px 80px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, #1a5a8a 100%);
+      border-radius: var(--radius);
+      padding: 48px;
+      color: #fff;
+      margin-bottom: 48px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(33,150,243,.35);
+      color: var(--blue-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(33,150,243,.4);
+    }
+    .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
+    .hero p { color: #94a3b8; font-size: 16px; max-width: 600px; }
+    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+    .tag {
+      background: rgba(255,255,255,0.1);
+      color: #cbd5e1;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    /* ── Sections ── */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 40px;
+      margin-bottom: 32px;
+      scroll-margin-top: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-num {
+      width: 36px; height: 36px; min-width: 36px;
+      background: var(--blue-dark);
+      color: #fff;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800;
+    }
+    .section h2 { font-size: 22px; font-weight: 700; color: var(--blue-dark); }
+
+    h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin: 28px 0 12px;
+      padding-left: 12px;
+      border-left: 3px solid var(--blue-light);
+    }
+
+    h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      margin: 22px 0 8px;
+    }
+
+    p { margin-bottom: 14px; }
+    ul, ol { padding-left: 20px; margin-bottom: 14px; }
+    li { margin-bottom: 6px; }
+
+    /* ── Código ── */
+    pre {
+      background: var(--code-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      overflow-x: auto;
+      margin: 18px 0;
+      position: relative;
+      border: 1px solid #1e2d3d;
+    }
+    pre code {
+      font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--code-text);
+      background: none;
+      padding: 0;
+    }
+
+    /* Syntax highlighting leve */
+    .kw  { color: #79b8ff; }   /* keywords: import, export, const, if, return */
+    .fn  { color: #b392f0; }   /* functions */
+    .str { color: #9ecbff; }   /* strings */
+    .num { color: #f8c555; }   /* numbers */
+    .cm  { color: #6a737d; font-style: italic; }  /* comments */
+    .prop{ color: #ffab70; }   /* props / object keys */
+    .tag-name { color: #85e89d; } /* JSX tags */
+    .bool{ color: #f97583; }   /* true/false/null */
+    .rx  { color: #fdaeb7; }   /* regex */
+
+    code:not(pre code) {
+      background: #eef2ff;
+      color: var(--blue-dark);
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      padding: 2px 7px;
+      border-radius: 5px;
+      border: 1px solid #c7d2fe;
+    }
+
+    /* ── Tabelas ── */
+    .table-wrap { overflow-x: auto; margin: 18px 0; }
+    table { border-collapse: collapse; width: 100%; font-size: 14px; }
+    th {
+      background: var(--blue-dark);
+      color: #fff;
+      padding: 10px 16px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td { padding: 9px 16px; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: #f1f5f9; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Callouts ── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 18px 0;
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .callout.info    { background: #eff6ff; border-left: 4px solid var(--blue-light); }
+    .callout.tip     { background: #f0fdf4; border-left: 4px solid var(--green); }
+    .callout.warning { background: #fffbeb; border-left: 4px solid var(--yellow); }
+    .callout strong  { display: block; margin-bottom: 4px; }
+
+    /* ── Diagrama ASCII ── */
+    .diagram {
+      background: #0f172a;
+      color: #94a3b8;
+      font-family: 'Fira Code', monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+      padding: 24px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 18px 0;
+      white-space: pre;
+      border: 1px solid #1e2d3d;
+    }
+
+    /* ── Arquivo pill ── */
+    .file-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 12px 3px 8px;
+      font-family: monospace;
+      font-size: 13px;
+      color: var(--blue-dark);
+      font-weight: 600;
+      margin: 3px 4px;
+    }
+    .file-pill::before { content: "📄"; font-size: 12px; }
+
+    /* ── Step badges ── */
+    .step-list { list-style: none; padding: 0; }
+    .step-list li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-badge {
+      min-width: 28px; height: 28px;
+      background: var(--blue-light);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+    }
+
+    /* ── Responsivo ── */
+    @media (max-width: 860px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 24px 20px 60px; }
+      .hero { padding: 32px 24px; }
+    }
+
+    /* ── Print ── */
+    @media print {
+      .sidebar { display: none; }
+      .main { margin-left: 0; max-width: 100%; padding: 0; }
+      .section { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="icon">V</div>
+    <span>voll</span>
+  </div>
+  <nav>
+    <div class="section-title">Introdução</div>
+    <a href="#s1">1. O que é este projeto?</a>
+    <a href="#s2">2. Tecnologias</a>
+    <a href="#s3">3. Estrutura de pastas</a>
+    <a href="#s4">4. Inicialização</a>
+
+    <div class="section-title">Base</div>
+    <a href="#s5">5. Sistema de cores</a>
+    <a href="#s6">6. Máscaras e validações</a>
+
+    <div class="section-title">Componentes</div>
+    <a href="#s7-1">7.1 ScreenContainer</a>
+    <a href="#s7-2">7.2 Logo</a>
+    <a href="#s7-3">7.3 Input</a>
+    <a href="#s7-4">7.4 Button</a>
+    <a href="#s7-5">7.5 Checkbox</a>
+
+    <div class="section-title">Navegação & Telas</div>
+    <a href="#s8">8. AppNavigator</a>
+    <a href="#s9-1">9.1 LoginScreen</a>
+    <a href="#s9-2">9.2 Cadastro Passo 1</a>
+    <a href="#s9-3">9.3 Cadastro Passo 2</a>
+    <a href="#s9-4">9.4 Cadastro Passo 3</a>
+
+    <div class="section-title">Conceitos & Arquitetura</div>
+    <a href="#s10">10. Fluxo de dados</a>
+    <a href="#s11">11. Conceitos fundamentais</a>
+    <a href="#s12">12. Arquitetura geral</a>
+  </nav>
+</aside>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Apostila Completa</div>
+    <h1>App Voll em React Native com Expo</h1>
+    <p>Guia passo a passo do desenvolvimento completo: componentes, navegação, validação de formulários, máscaras de input e fluxo de dados entre telas.</p>
+    <div class="hero-tags">
+      <span class="tag">React Native 0.73</span>
+      <span class="tag">Expo 50</span>
+      <span class="tag">React Navigation 6</span>
+      <span class="tag">react-native-mask-input</span>
+      <span class="tag">react-native-svg</span>
+    </div>
+  </div>
+
+  <!-- ─── SEÇÃO 1 ─── -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>O que é este projeto?</h2>
+    </div>
+    <p>O <strong>App Voll</strong> é um aplicativo mobile criado com <strong>React Native + Expo</strong>. Ele simula o fluxo de <strong>login</strong> e <strong>cadastro</strong> de um aplicativo de saúde, onde o usuário:</p>
+    <ol class="step-list">
+      <li><span class="step-badge">1</span><span>Faz login com e-mail e senha.</span></li>
+      <li><span class="step-badge">2</span><span>Caso não tenha conta, realiza um cadastro dividido em <strong>3 passos</strong>.</span></li>
+      <li><span class="step-badge">3</span><span><strong>Passo 1 —</strong> dados pessoais: nome, e-mail, senha.</span></li>
+      <li><span class="step-badge">4</span><span><strong>Passo 2 —</strong> endereço: CEP, logradouro, número, complemento, telefone.</span></li>
+      <li><span class="step-badge">5</span><span><strong>Passo 3 —</strong> plano de saúde: seleção por checkboxes.</span></li>
+    </ol>
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>Por que dividir o cadastro em etapas?</strong> Formulários longos em uma única tela aumentam a taxa de abandono. Dividir em passos melhora a experiência do usuário (UX) e permite validar cada grupo de campos antes de avançar.</div>
+    </div>
+  </section>
+
+  <!-- ─── SEÇÃO 2 ─── -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>Tecnologias e bibliotecas utilizadas</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Biblioteca</th><th>Versão</th><th>Para que serve</th></tr></thead>
+        <tbody>
+          <tr><td><code>expo</code></td><td>~50.0.17</td><td>Plataforma que facilita o desenvolvimento React Native</td></tr>
+          <tr><td><code>react</code></td><td>18.2.0</td><td>Biblioteca principal para criar componentes</td></tr>
+          <tr><td><code>react-native</code></td><td>0.73.6</td><td>Framework para criar apps móveis com JavaScript</td></tr>
+          <tr><td><code>@react-navigation/native</code></td><td>^6.1.17</td><td>Sistema de navegação entre telas</td></tr>
+          <tr><td><code>@react-navigation/native-stack</code></td><td>^6.9.26</td><td>Navegação em pilha (stack) com animações nativas</td></tr>
+          <tr><td><code>react-native-safe-area-context</code></td><td>4.8.2</td><td>Respeita notch, barra de status e áreas seguras</td></tr>
+          <tr><td><code>react-native-screens</code></td><td>~3.29.0</td><td>Otimiza renderização usando telas nativas do SO</td></tr>
+          <tr><td><code>react-native-mask-input</code></td><td>^1.2.3</td><td>Formata inputs com máscaras (CEP, telefone)</td></tr>
+          <tr><td><code>react-native-svg</code></td><td>14.1.0</td><td>Permite desenhar vetores SVG (logo)</td></tr>
+          <tr><td><code>expo-status-bar</code></td><td>~1.11.1</td><td>Controla a barra de status do celular</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Como instalar e rodar</h3>
+    <pre><code><span class="cm"># Instala todas as dependências do package.json</span>
+npm install
+
+<span class="cm"># Inicia o servidor de desenvolvimento</span>
+npx expo start
+
+<span class="cm"># Para rodar diretamente em um dispositivo/emulador</span>
+npx expo start --android
+npx expo start --ios</code></pre>
+  </section>
+
+  <!-- ─── SEÇÃO 3 ─── -->
+  <section class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Estrutura de pastas</h2>
+    </div>
+    <div class="diagram">app_voll/
+├── index.js                    ← Ponto de entrada do Expo
+├── App.jsx                     ← Componente raiz da aplicação
+├── package.json                ← Lista de dependências e scripts
+├── babel.config.js             ← Configuração do compilador
+├── app.json                    ← Configurações do Expo (nome, ícone, etc.)
+│
+└── src/                        ← Todo o código-fonte fica aqui
+    ├── components/             ← Peças de UI reutilizáveis em qualquer tela
+    │   ├── Button.jsx          ← Botão primário e secundário
+    │   ├── Checkbox.jsx        ← Caixa de seleção com rótulo
+    │   ├── Input.jsx           ← Campo de texto com suporte a máscara
+    │   ├── Logo.jsx            ← Logo SVG do app
+    │   └── ScreenContainer.jsx ← Wrapper padrão de cada tela
+    │
+    ├── navigation/
+    │   └── AppNavigator.jsx    ← Define as rotas e como navegar entre elas
+    │
+    ├── screens/                ← Cada arquivo é uma tela completa
+    │   ├── LoginScreen.jsx
+    │   ├── CadastroPasso1Screen.jsx
+    │   ├── CadastroPasso2Screen.jsx
+    │   └── CadastroPasso3Screen.jsx
+    │
+    ├── theme/
+    │   └── colors.js           ← Paleta de cores centralizada
+    │
+    └── utils/
+        └── masks.js            ← Máscaras e funções de validação</div>
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <div><strong>Por que essa estrutura?</strong> Separar em <code>components</code>, <code>screens</code>, <code>navigation</code>, <code>theme</code> e <code>utils</code> é uma convenção amplamente usada em React Native. Facilita encontrar arquivos, reutilizar código e escalar o projeto.</div>
+    </div>
+  </section>
+
+  <!-- ─── SEÇÃO 4 ─── -->
+  <section class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>Como o projeto inicia — index.js e App.jsx</h2>
+    </div>
+
+    <h3>index.js</h3>
+    <pre><code><span class="kw">import</span> { registerRootComponent } <span class="kw">from</span> <span class="str">'expo'</span>; <span class="cm">// Importa a função que registra o componente raiz no Expo.</span>
+<span class="kw">import</span> App <span class="kw">from</span> <span class="str">'./App'</span>;                       <span class="cm">// Importa o componente principal do app.</span>
+
+<span class="fn">registerRootComponent</span>(App); <span class="cm">// Diz ao Expo: "este é o componente inicial, renderize ele primeiro".</span></code></pre>
+
+    <h3>App.jsx</h3>
+    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;                               <span class="cm">// Importa o React — necessário em todo arquivo JSX.</span>
+<span class="kw">import</span> { StatusBar } <span class="kw">from</span> <span class="str">'expo-status-bar'</span>;             <span class="cm">// Controla a barra de status do celular.</span>
+<span class="kw">import</span> { SafeAreaProvider } <span class="kw">from</span> <span class="str">'react-native-safe-area-context'</span>; <span class="cm">// Provê contexto de área segura para toda a árvore.</span>
+<span class="kw">import</span> AppNavigator <span class="kw">from</span> <span class="str">'./src/navigation/AppNavigator'</span>; <span class="cm">// Importa o navegador que define as telas do app.</span>
+
+<span class="kw">export default function</span> <span class="fn">App</span>() {                          <span class="cm">// Declara e exporta o componente principal.</span>
+  <span class="kw">return</span> (
+    <span class="tag-name">&lt;SafeAreaProvider&gt;</span>                                   <span class="cm">// Envolve todo o app para que componentes filhos</span>
+                                                          <span class="cm">// saibam onde ficam o notch, barra de status etc.</span>
+      <span class="tag-name">&lt;StatusBar</span> <span class="prop">style</span>=<span class="str">"auto"</span> <span class="tag-name">/&gt;</span>                         <span class="cm">// Ajusta a barra de status ao tema do celular.</span>
+      <span class="tag-name">&lt;AppNavigator /&gt;</span>                                   <span class="cm">// Renderiza o sistema de navegação com todas as telas.</span>
+    <span class="tag-name">&lt;/SafeAreaProvider&gt;</span>
+  );
+}</code></pre>
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>SafeAreaProvider</strong> — Em celulares modernos existem "áreas perigosas" onde a interface do sistema fica (notch, câmera de buraco, barra de gestos). O <code>SafeAreaProvider</code> calcula essas áreas e disponibiliza a informação para todos os componentes filhos via contexto React. Sem ele, o conteúdo pode ficar escondido atrás do notch.</div>
+    </div>
+  </section>
+
+  <!-- ─── SEÇÃO 5 ─── -->
+  <section class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>Sistema de cores — theme/colors.js</h2>
+    </div>
+    <pre><code><span class="cm">// Paleta de cores do app Voll</span>
+<span class="kw">const</span> colors = {
+  <span class="prop">primary</span>:         <span class="str">'#0B3B60'</span>,   <span class="cm">// Azul escuro — botões principais, bordas de inputs, labels.</span>
+  <span class="prop">primaryDark</span>:     <span class="str">'#082846'</span>,   <span class="cm">// Azul ainda mais escuro — reservado para variações futuras.</span>
+  <span class="prop">accent</span>:          <span class="str">'#2196F3'</span>,   <span class="cm">// Azul claro — logo, links e destaques.</span>
+  <span class="prop">textPrimary</span>:     <span class="str">'#333333'</span>,   <span class="cm">// Cor padrão de texto — quase preto, mais suave que #000.</span>
+  <span class="prop">textSecondary</span>:   <span class="str">'#6B7280'</span>,   <span class="cm">// Cinza médio — textos secundários, subtítulos.</span>
+  <span class="prop">inputBackground</span>: <span class="str">'#F4F4F4'</span>,   <span class="cm">// Fundo levemente acinzentado dos campos de texto.</span>
+  <span class="prop">inputBorder</span>:     <span class="str">'#E5E7EB'</span>,   <span class="cm">// Borda dos campos de texto em estado normal.</span>
+  <span class="prop">placeholder</span>:     <span class="str">'#9CA3AF'</span>,   <span class="cm">// Cor do texto de placeholder (dica dentro do campo vazio).</span>
+  <span class="prop">white</span>:           <span class="str">'#FFFFFF'</span>,   <span class="cm">// Branco — texto em botões e elementos no fundo escuro.</span>
+  <span class="prop">disabled</span>:        <span class="str">'#A3A3A3'</span>,   <span class="cm">// Cinza — fundo do botão "Voltar" (variante secundária).</span>
+  <span class="prop">backgroundDark</span>:  <span class="str">'#000000'</span>,   <span class="cm">// Preto — fundo da tela 3 (seleção de planos).</span>
+  <span class="prop">error</span>:           <span class="str">'#DC2626'</span>,   <span class="cm">// Vermelho — bordas e mensagens de erro.</span>
+};
+
+<span class="kw">export default</span> colors; <span class="cm">// Exporta o objeto para que outros arquivos possam importar.</span></code></pre>
+    <div class="callout warning">
+      <span class="callout-icon">⚡</span>
+      <div><strong>Princípio DRY</strong> — Imagine que a cor primária mude de azul para verde. Sem centralização, você editaria dezenas de arquivos. Com um arquivo de tema, muda apenas uma linha e todo o app atualiza.</div>
+    </div>
+  </section>
+
+  <!-- ─── SEÇÃO 6 ─── -->
+  <section class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>Utilitários de máscara e validação — utils/masks.js</h2>
+    </div>
+    <pre><code><span class="cm">// Máscara de CEP: formata "12345678" como "12345-678"</span>
+<span class="kw">export const</span> CEP_MASK = [
+  <span class="rx">/\d/</span>, <span class="cm">// 1° dígito: aceita qualquer número (\d = 0-9)</span>
+  <span class="rx">/\d/</span>, <span class="cm">// 2° dígito</span>
+  <span class="rx">/\d/</span>, <span class="cm">// 3° dígito</span>
+  <span class="rx">/\d/</span>, <span class="cm">// 4° dígito</span>
+  <span class="rx">/\d/</span>, <span class="cm">// 5° dígito</span>
+  <span class="str">'-'</span>,  <span class="cm">// Caractere fixo: o hífen é inserido automaticamente</span>
+  <span class="rx">/\d/</span>, <span class="cm">// 6° dígito</span>
+  <span class="rx">/\d/</span>, <span class="cm">// 7° dígito</span>
+  <span class="rx">/\d/</span>, <span class="cm">// 8° dígito</span>
+];
+
+<span class="cm">// Máscara de telefone: formata "11912345678" como "(11) 91234-5678"</span>
+<span class="kw">export const</span> PHONE_MASK = [
+  <span class="str">'('</span>,  <span class="cm">// Parêntese de abertura (inserido automaticamente)</span>
+  <span class="rx">/\d/</span>, <span class="cm">// DDD - 1° dígito</span>
+  <span class="rx">/\d/</span>, <span class="cm">// DDD - 2° dígito</span>
+  <span class="str">')'</span>,  <span class="cm">// Parêntese de fechamento</span>
+  <span class="str">' '</span>,  <span class="cm">// Espaço fixo</span>
+  <span class="rx">/\d/</span>, <span class="rx">/\d/</span>, <span class="rx">/\d/</span>, <span class="rx">/\d/</span>, <span class="rx">/\d/</span>, <span class="cm">// 5 dígitos do número</span>
+  <span class="str">'-'</span>,  <span class="cm">// Hífen separador</span>
+  <span class="rx">/\d/</span>, <span class="rx">/\d/</span>, <span class="rx">/\d/</span>, <span class="rx">/\d/</span>, <span class="cm">// 4 dígitos finais</span>
+];
+
+<span class="cm">// Remove tudo que não é dígito — útil para validar sem a formatação</span>
+<span class="kw">export const</span> <span class="fn">onlyDigits</span> = (value) =>
+  (value || <span class="str">''</span>).<span class="fn">replace</span>(<span class="rx">/\D/g</span>, <span class="str">''</span>);
+  <span class="cm">// (value || '') → se value for null/undefined, usa string vazia</span>
+  <span class="cm">// .replace(/\D/g, '') → apaga todos os não-dígitos (\D)</span>
+  <span class="cm">// A flag 'g' = "global": substitui TODAS as ocorrências</span>
+
+<span class="cm">// Validação básica de e-mail</span>
+<span class="kw">export const</span> <span class="fn">isValidEmail</span> = (email) => {
+  <span class="kw">if</span> (!email) <span class="kw">return</span> <span class="bool">false</span>;            <span class="cm">// Vazio → inválido</span>
+  <span class="kw">const</span> re = <span class="rx">/^[^\s@]+@[^\s@]+\.[^\s@]+$/</span>;
+  <span class="cm">// ^ → início | [^\s@]+ → chars antes do @ | @ → arroba</span>
+  <span class="cm">// [^\s@]+ → domínio | \. → ponto literal | [^\s@]+$ → extensão até o fim</span>
+  <span class="kw">return</span> re.<span class="fn">test</span>(email.<span class="fn">trim</span>()); <span class="cm">// .trim() remove espaços das bordas</span>
+};
+
+<span class="cm">// CEP deve ter exatamente 8 dígitos (após remover o hífen)</span>
+<span class="kw">export const</span> <span class="fn">isValidCEP</span> = (cep) => <span class="fn">onlyDigits</span>(cep).length === <span class="num">8</span>;
+<span class="cm">// Exemplo: "12345-678" → onlyDigits → "12345678" → length 8 → true</span>
+
+<span class="cm">// Telefone: 10 dígitos (fixo) ou 11 dígitos (celular com 9°)</span>
+<span class="kw">export const</span> <span class="fn">isValidPhone</span> = (phone) => {
+  <span class="kw">const</span> d = <span class="fn">onlyDigits</span>(phone).length;
+  <span class="kw">return</span> d === <span class="num">10</span> || d === <span class="num">11</span>;
+};</code></pre>
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <div><strong>Como a máscara funciona?</strong> Cada elemento do array é aplicado posição a posição ao texto digitado. Se o elemento é um <code>RegExp</code> (ex: <code>/\d/</code>), o caractere digitado precisa satisfazê-lo. Se é uma string (ex: <code>'-'</code>), é inserida automaticamente sem que o usuário precise digitar.</div>
+    </div>
+  </section>
+
+  <!-- ─── SEÇÃO 7.1 ─── -->
+  <section class="section" id="s7-1">
+    <div class="section-header">
+      <div class="section-num">7.1</div>
+      <h2>Componente — ScreenContainer.jsx</h2>
+    </div>
+    <p>Este é o <strong>invólucro (wrapper) padrão</strong> de todas as telas. Ele resolve três problemas comuns:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Problema</th><th>Solução</th></tr></thead>
+        <tbody>
+          <tr><td>Conteúdo escondido atrás do notch/barra de status</td><td><code>SafeAreaView</code></td></tr>
+          <tr><td>Teclado sobrepõe os campos quando abre</td><td><code>KeyboardAvoidingView</code></td></tr>
+          <tr><td>Conteúdo maior que a tela não rola</td><td><code>ScrollView</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { View, ScrollView, KeyboardAvoidingView, Platform, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>;
+<span class="kw">import</span> { SafeAreaView } <span class="kw">from</span> <span class="str">'react-native-safe-area-context'</span>;
+<span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
+
+<span class="kw">export default function</span> <span class="fn">ScreenContainer</span>({ children, dark = <span class="bool">false</span> }) {
+  <span class="kw">return</span> (
+    <span class="tag-name">&lt;SafeAreaView</span>
+      <span class="prop">style</span>={[styles.safe, dark &amp;&amp; styles.safeDark]}
+      <span class="cm">// Array de estilos: sempre aplica 'safe', adiciona 'safeDark' SOMENTE se dark=true</span>
+      <span class="prop">edges</span>={[<span class="str">'top'</span>, <span class="str">'left'</span>, <span class="str">'right'</span>, <span class="str">'bottom'</span>]}
+      <span class="cm">// Respeita as áreas seguras em todas as bordas</span>
+    <span class="tag-name">&gt;</span>
+      <span class="tag-name">&lt;KeyboardAvoidingView</span>
+        <span class="prop">style</span>={styles.flex}
+        <span class="prop">behavior</span>={Platform.OS === <span class="str">'ios'</span> ? <span class="str">'padding'</span> : <span class="bool">undefined</span>}
+        <span class="cm">// iOS: adiciona padding embaixo do conteúdo quando o teclado abre</span>
+        <span class="cm">// Android: o SO já faz esse ajuste automaticamente → undefined</span>
+      <span class="tag-name">&gt;</span>
+        <span class="tag-name">&lt;ScrollView</span>
+          <span class="prop">contentContainerStyle</span>={styles.scroll}
+          <span class="prop">keyboardShouldPersistTaps</span>=<span class="str">"handled"</span>
+          <span class="cm">// "handled": toque fora do teclado fecha-o E processa o toque (ex: clica no botão)</span>
+          <span class="prop">showsVerticalScrollIndicator</span>={<span class="bool">false</span>} <span class="cm">// Oculta a barra de rolagem lateral</span>
+        <span class="tag-name">&gt;</span>
+          <span class="tag-name">&lt;View</span> <span class="prop">style</span>={styles.inner}<span class="tag-name">&gt;</span>{children}<span class="tag-name">&lt;/View&gt;</span>
+        <span class="tag-name">&lt;/ScrollView&gt;</span>
+      <span class="tag-name">&lt;/KeyboardAvoidingView&gt;</span>
+    <span class="tag-name">&lt;/SafeAreaView&gt;</span>
+  );
+}
+
+<span class="kw">const</span> styles = StyleSheet.<span class="fn">create</span>({
+  <span class="prop">safe</span>: { flex: <span class="num">1</span>, backgroundColor: colors.white },        <span class="cm">// Fundo branco padrão</span>
+  <span class="prop">safeDark</span>: { backgroundColor: colors.backgroundDark },     <span class="cm">// Fundo preto quando dark=true</span>
+  <span class="prop">flex</span>: { flex: <span class="num">1</span> },
+  <span class="prop">scroll</span>: { flexGrow: <span class="num">1</span>, paddingHorizontal: <span class="num">24</span>, paddingTop: <span class="num">16</span>, paddingBottom: <span class="num">32</span> },
+  <span class="prop">inner</span>: { flex: <span class="num">1</span> },
+});</code></pre>
+  </section>
+
+  <!-- ─── SEÇÃO 7.2 ─── -->
+  <section class="section" id="s7-2">
+    <div class="section-header">
+      <div class="section-num">7.2</div>
+      <h2>Componente — Logo.jsx</h2>
+    </div>
+    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { View, Text, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>;
+<span class="kw">import</span> Svg, { Path } <span class="kw">from</span> <span class="str">'react-native-svg'</span>; <span class="cm">// Primitivos de SVG</span>
+<span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
+
+<span class="kw">export default function</span> <span class="fn">Logo</span>({ size = <span class="num">28</span> }) {       <span class="cm">// size padrão: 28px</span>
+  <span class="kw">const</span> iconSize = size;
+  <span class="kw">const</span> fontSize = size * <span class="num">1.15</span>;                       <span class="cm">// Texto 15% maior que o ícone</span>
+
+  <span class="kw">return</span> (
+    <span class="tag-name">&lt;View</span> <span class="prop">style</span>={styles.wrapper}<span class="tag-name">&gt;</span>               <span class="cm">// Container em linha (row)</span>
+      <span class="tag-name">&lt;Svg</span> <span class="prop">width</span>={iconSize} <span class="prop">height</span>={iconSize} <span class="prop">viewBox</span>=<span class="str">"0 0 48 48"</span><span class="tag-name">&gt;</span>
+        <span class="cm">// viewBox define as coordenadas internas do SVG (de 0 a 48)</span>
+
+        <span class="cm">// Estrela nos eixos horizontal e vertical</span>
+        <span class="tag-name">&lt;Path</span>
+          <span class="prop">d</span>=<span class="str">"M24 4 L26 22 L44 24 L26 26 L24 44 L22 26 L4 24 L22 22 Z"</span>
+          <span class="cm">// M24 4  → Começa no topo | L44 24 → ponta direita | L4 24 → ponta esquerda</span>
+          <span class="prop">fill</span>={colors.accent}
+        <span class="tag-name">/&gt;</span>
+        <span class="cm">// Estrela rotacionada 45° (pontas diagonais)</span>
+        <span class="tag-name">&lt;Path</span>
+          <span class="prop">d</span>=<span class="str">"M10 10 L24 22 L38 10 L26 24 L38 38 L24 26 L10 38 L22 24 Z"</span>
+          <span class="prop">fill</span>={colors.accent}
+          <span class="prop">opacity</span>={<span class="num">0.85</span>} <span class="cm">// Levemente transparente para criar profundidade</span>
+        <span class="tag-name">/&gt;</span>
+      <span class="tag-name">&lt;/Svg&gt;</span>
+
+      <span class="tag-name">&lt;Text</span> <span class="prop">style</span>={[styles.text, { fontSize }]}<span class="tag-name">&gt;</span>voll<span class="tag-name">&lt;/Text&gt;</span>
+    <span class="tag-name">&lt;/View&gt;</span>
+  );
+}
+
+<span class="kw">const</span> styles = StyleSheet.<span class="fn">create</span>({
+  <span class="prop">wrapper</span>: { flexDirection: <span class="str">'row'</span>, alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span>, gap: <span class="num">6</span> },
+  <span class="prop">text</span>: { color: colors.accent, fontWeight: <span class="str">'600'</span>, letterSpacing: <span class="num">0.5</span> },
+});</code></pre>
+  </section>
+
+  <!-- ─── SEÇÃO 7.3 ─── -->
+  <section class="section" id="s7-3">
+    <div class="section-header">
+      <div class="section-num">7.3</div>
+      <h2>Componente — Input.jsx</h2>
+    </div>
+    <p>O <code>Input</code> é o componente mais complexo do projeto. Ele suporta dois modos: <strong>campo normal</strong> e <strong>campo com máscara</strong>.</p>
+    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { View, Text, TextInput, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>;
+<span class="kw">import</span> MaskInput <span class="kw">from</span> <span class="str">'react-native-mask-input'</span>;
+<span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
+
+<span class="kw">export default function</span> <span class="fn">Input</span>({
+  label,                        <span class="cm">// Texto exibido acima do campo</span>
+  placeholder,                  <span class="cm">// Dica dentro do campo vazio</span>
+  value,                        <span class="cm">// Valor atual — controlado pelo pai</span>
+  onChangeText,                 <span class="cm">// Função chamada a cada digitação</span>
+  secureTextEntry,              <span class="cm">// true → oculta texto (campo de senha)</span>
+  keyboardType = <span class="str">'default'</span>,    <span class="cm">// Tipo de teclado a abrir</span>
+  autoCapitalize = <span class="str">'sentences'</span>,<span class="cm">// Capitalização automática</span>
+  mask,                         <span class="cm">// Array de máscara — opcional</span>
+  error,                        <span class="cm">// Mensagem de erro — exibe borda vermelha</span>
+  onDark = <span class="bool">false</span>,              <span class="cm">// true → cores para fundo escuro</span>
+}) {
+  <span class="cm">// Escolha dinâmica: MaskInput quando há máscara, TextInput quando não</span>
+  <span class="kw">const</span> Field = mask ? MaskInput : TextInput;
+
+  <span class="kw">const</span> fieldProps = mask
+    ? {
+        mask,
+        value,
+        <span class="prop">onChangeText</span>: (masked, unmasked) => <span class="fn">onChangeText</span>(masked, unmasked),
+        <span class="cm">// MaskInput passa (masked, unmasked) — o valor formatado e o valor cru</span>
+      }
+    : { value, onChangeText };   <span class="cm">// TextInput passa apenas o valor</span>
+
+  <span class="kw">return</span> (
+    <span class="tag-name">&lt;View</span> <span class="prop">style</span>={styles.container}<span class="tag-name">&gt;</span>
+      {label ? (
+        <span class="tag-name">&lt;Text</span> <span class="prop">style</span>={[styles.label, onDark &amp;&amp; styles.labelDark]}<span class="tag-name">&gt;</span>{label}<span class="tag-name">&lt;/Text&gt;</span>
+        <span class="cm">// labelDark: usa cor de destaque (azul claro) em fundo preto</span>
+      ) : <span class="bool">null</span>}
+
+      <span class="tag-name">&lt;Field</span>
+        {...fieldProps}                        <span class="cm">// Espalha as props preparadas</span>
+        <span class="prop">placeholder</span>={placeholder}
+        <span class="prop">placeholderTextColor</span>={colors.placeholder}
+        <span class="prop">secureTextEntry</span>={secureTextEntry}
+        <span class="prop">keyboardType</span>={keyboardType}
+        <span class="prop">autoCapitalize</span>={autoCapitalize}
+        <span class="prop">style</span>={[styles.input, error &amp;&amp; styles.inputError]}
+        <span class="cm">// inputError: borda vermelha quando há mensagem de erro</span>
+      <span class="tag-name">/&gt;</span>
+
+      {error ? <span class="tag-name">&lt;Text</span> <span class="prop">style</span>={styles.errorText}<span class="tag-name">&gt;</span>{error}<span class="tag-name">&lt;/Text&gt;</span> : <span class="bool">null</span>}
+      <span class="cm">// Exibe mensagem de erro somente quando "error" tem valor</span>
+    <span class="tag-name">&lt;/View&gt;</span>
+  );
+}
+
+<span class="kw">const</span> styles = StyleSheet.<span class="fn">create</span>({
+  <span class="prop">container</span>:  { marginBottom: <span class="num">16</span> },                    <span class="cm">// Espaço entre campos</span>
+  <span class="prop">label</span>:      { color: colors.primary, fontSize: <span class="num">15</span>, fontWeight: <span class="str">'700'</span>, marginBottom: <span class="num">6</span> },
+  <span class="prop">labelDark</span>:  { color: colors.accent },                  <span class="cm">// Azul claro em fundo escuro</span>
+  <span class="prop">input</span>: {
+    backgroundColor: colors.inputBackground,              <span class="cm">// Cinza claro (#F4F4F4)</span>
+    borderRadius: <span class="num">10</span>, paddingHorizontal: <span class="num">14</span>, paddingVertical: <span class="num">12</span>,
+    fontSize: <span class="num">15</span>, color: colors.textPrimary,
+    borderWidth: <span class="num">1</span>, borderColor: colors.inputBorder,    <span class="cm">// Borda padrão</span>
+  },
+  <span class="prop">inputError</span>: { borderColor: colors.error },            <span class="cm">// Troca borda para vermelho</span>
+  <span class="prop">errorText</span>:  { color: colors.error, fontSize: <span class="num">12</span>, marginTop: <span class="num">4</span> },
+});</code></pre>
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>Componente Controlado</strong> — O <code>Input</code> não guarda o texto em si. O valor vem sempre do estado do pai via <code>value</code>, e cada digitação chama <code>onChangeText</code> para que o pai atualize seu estado. Isso dá controle total ao componente pai sobre os dados do formulário.</div>
+    </div>
+  </section>
+
+  <!-- ─── SEÇÃO 7.4 ─── -->
+  <section class="section" id="s7-4">
+    <div class="section-header">
+      <div class="section-num">7.4</div>
+      <h2>Componente — Button.jsx</h2>
+    </div>
+    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { TouchableOpacity, Text, StyleSheet, ActivityIndicator } <span class="kw">from</span> <span class="str">'react-native'</span>;
+<span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
+
+<span class="kw">export default function</span> <span class="fn">Button</span>({
+  title,                  <span class="cm">// Texto do botão</span>
+  onPress,                <span class="cm">// Função chamada ao pressionar</span>
+  variant = <span class="str">'primary'</span>,   <span class="cm">// 'primary' (azul) ou 'secondary' (cinza) — padrão: primary</span>
+  disabled = <span class="bool">false</span>,      <span class="cm">// Se true, desabilita o toque</span>
+  loading = <span class="bool">false</span>,       <span class="cm">// Se true, exibe spinner em vez do texto</span>
+  style,                  <span class="cm">// Estilos extras do componente pai</span>
+}) {
+  <span class="kw">const</span> isSecondary = variant === <span class="str">'secondary'</span>;
+
+  <span class="kw">return</span> (
+    <span class="tag-name">&lt;TouchableOpacity</span>
+      <span class="prop">activeOpacity</span>={<span class="num">0.85</span>}          <span class="cm">// 85% de opacidade ao pressionar (feedback visual)</span>
+      <span class="prop">onPress</span>={onPress}
+      <span class="prop">disabled</span>={disabled || loading}  <span class="cm">// Desabilitado se marcado ou carregando</span>
+      <span class="prop">style</span>={[
+        styles.base,
+        isSecondary ? styles.secondary : styles.primary, <span class="cm">// Cor conforme variante</span>
+        (disabled || loading) &amp;&amp; styles.disabled,         <span class="cm">// Reduz opacidade quando inativo</span>
+        style,                                            <span class="cm">// Estilos extras do pai</span>
+      ]}
+    <span class="tag-name">&gt;</span>
+      {loading
+        ? <span class="tag-name">&lt;ActivityIndicator</span> <span class="prop">color</span>={colors.white} <span class="tag-name">/&gt;</span>  <span class="cm">// Spinner durante carregamento</span>
+        : <span class="tag-name">&lt;Text</span> <span class="prop">style</span>={styles.text}<span class="tag-name">&gt;</span>{title}<span class="tag-name">&lt;/Text&gt;</span>
+      }
+    <span class="tag-name">&lt;/TouchableOpacity&gt;</span>
+  );
+}
+
+<span class="kw">const</span> styles = StyleSheet.<span class="fn">create</span>({
+  <span class="prop">base</span>:      { paddingVertical: <span class="num">14</span>, borderRadius: <span class="num">10</span>, alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span>, marginTop: <span class="num">8</span> },
+  <span class="prop">primary</span>:   { backgroundColor: colors.primary },    <span class="cm">// Azul escuro (#0B3B60)</span>
+  <span class="prop">secondary</span>: { backgroundColor: colors.disabled },   <span class="cm">// Cinza (#A3A3A3)</span>
+  <span class="prop">disabled</span>:  { opacity: <span class="num">0.7</span> },                       <span class="cm">// Botão inativo = semi-transparente</span>
+  <span class="prop">text</span>:      { color: colors.white, fontSize: <span class="num">16</span>, fontWeight: <span class="str">'700'</span> },
+});</code></pre>
+  </section>
+
+  <!-- ─── SEÇÃO 7.5 ─── -->
+  <section class="section" id="s7-5">
+    <div class="section-header">
+      <div class="section-num">7.5</div>
+      <h2>Componente — Checkbox.jsx</h2>
+    </div>
+    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { TouchableOpacity, Text, View, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>;
+<span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
+
+<span class="kw">export default function</span> <span class="fn">Checkbox</span>({ label, checked, onPress, onDark = <span class="bool">false</span> }) {
+  <span class="kw">return</span> (
+    <span class="tag-name">&lt;TouchableOpacity</span>
+      <span class="prop">style</span>={styles.row}
+      <span class="prop">onPress</span>={onPress}     <span class="cm">// Notifica o pai para alternar o estado</span>
+      <span class="prop">activeOpacity</span>={<span class="num">0.7</span>}  <span class="cm">// Feedback visual ao pressionar</span>
+    <span class="tag-name">&gt;</span>
+      <span class="tag-name">&lt;View</span> <span class="prop">style</span>={[
+        styles.box,
+        onDark &amp;&amp; styles.boxDark,       <span class="cm">// Borda branca em fundo escuro</span>
+        checked &amp;&amp; styles.boxChecked,   <span class="cm">// Fundo azul quando marcado</span>
+      ]}<span class="tag-name">&gt;</span>
+        {checked ? <span class="tag-name">&lt;Text</span> <span class="prop">style</span>={styles.check}<span class="tag-name">&gt;</span>✓<span class="tag-name">&lt;/Text&gt;</span> : <span class="bool">null</span>}
+        <span class="cm">// Exibe o ✓ somente quando checked=true</span>
+      <span class="tag-name">&lt;/View&gt;</span>
+
+      <span class="tag-name">&lt;Text</span> <span class="prop">style</span>={[styles.label, onDark &amp;&amp; styles.labelDark]}<span class="tag-name">&gt;</span>{label}<span class="tag-name">&lt;/Text&gt;</span>
+    <span class="tag-name">&lt;/TouchableOpacity&gt;</span>
+  );
+}
+
+<span class="kw">const</span> styles = StyleSheet.<span class="fn">create</span>({
+  <span class="prop">row</span>:        { flexDirection: <span class="str">'row'</span>, alignItems: <span class="str">'center'</span>, paddingVertical: <span class="num">8</span> },
+  <span class="prop">box</span>: {
+    width: <span class="num">22</span>, height: <span class="num">22</span>, borderRadius: <span class="num">4</span>,
+    borderWidth: <span class="num">1.5</span>, borderColor: colors.primary,
+    marginRight: <span class="num">12</span>,                                    <span class="cm">// Espaço entre caixa e texto</span>
+    alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span>,
+    backgroundColor: <span class="str">'transparent'</span>,                    <span class="cm">// Transparente quando desmarcado</span>
+  },
+  <span class="prop">boxDark</span>:    { borderColor: colors.white },             <span class="cm">// Borda branca em fundo preto</span>
+  <span class="prop">boxChecked</span>: { backgroundColor: colors.primary, borderColor: colors.primary }, <span class="cm">// Fundo azul</span>
+  <span class="prop">check</span>:      { color: colors.white, fontSize: <span class="num">14</span>, fontWeight: <span class="str">'700'</span>, lineHeight: <span class="num">16</span> },
+  <span class="prop">label</span>:      { fontSize: <span class="num">16</span>, color: colors.textPrimary },
+  <span class="prop">labelDark</span>:  { color: colors.white },
+});</code></pre>
+  </section>
+
+  <!-- ─── SEÇÃO 8 ─── -->
+  <section class="section" id="s8">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <h2>Navegação — AppNavigator.jsx</h2>
+    </div>
+    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { NavigationContainer } <span class="kw">from</span> <span class="str">'@react-navigation/native'</span>;
+<span class="cm">// NavigationContainer: contexto global de navegação. Mantém o histórico de telas (a "pilha").</span>
+<span class="kw">import</span> { createNativeStackNavigator } <span class="kw">from</span> <span class="str">'@react-navigation/native-stack'</span>;
+<span class="cm">// createNativeStackNavigator: navegador de pilha usando componentes nativos do iOS/Android.</span>
+
+<span class="kw">import</span> LoginScreen <span class="kw">from</span> <span class="str">'../screens/LoginScreen'</span>;
+<span class="kw">import</span> CadastroPasso1Screen <span class="kw">from</span> <span class="str">'../screens/CadastroPasso1Screen'</span>;
+<span class="kw">import</span> CadastroPasso2Screen <span class="kw">from</span> <span class="str">'../screens/CadastroPasso2Screen'</span>;
+<span class="kw">import</span> CadastroPasso3Screen <span class="kw">from</span> <span class="str">'../screens/CadastroPasso3Screen'</span>;
+
+<span class="kw">const</span> Stack = <span class="fn">createNativeStackNavigator</span>(); <span class="cm">// Cria a instância do navegador</span>
+
+<span class="kw">export default function</span> <span class="fn">AppNavigator</span>() {
+  <span class="kw">return</span> (
+    <span class="tag-name">&lt;NavigationContainer&gt;</span>
+      <span class="tag-name">&lt;Stack.Navigator</span>
+        <span class="prop">initialRouteName</span>=<span class="str">"Login"</span>        <span class="cm">// Tela exibida ao abrir o app</span>
+        <span class="prop">screenOptions</span>={{
+          <span class="prop">headerShown</span>: <span class="bool">false</span>,            <span class="cm">// Oculta o cabeçalho padrão em TODAS as telas</span>
+          <span class="prop">animation</span>: <span class="str">'slide_from_right'</span>, <span class="cm">// Animação: desliza da direita para a esquerda</span>
+        }}
+      <span class="tag-name">&gt;</span>
+        <span class="tag-name">&lt;Stack.Screen</span> <span class="prop">name</span>=<span class="str">"Login"</span>          <span class="prop">component</span>={LoginScreen} <span class="tag-name">/&gt;</span>
+        <span class="tag-name">&lt;Stack.Screen</span> <span class="prop">name</span>=<span class="str">"CadastroPasso1"</span> <span class="prop">component</span>={CadastroPasso1Screen} <span class="tag-name">/&gt;</span>
+        <span class="tag-name">&lt;Stack.Screen</span> <span class="prop">name</span>=<span class="str">"CadastroPasso2"</span> <span class="prop">component</span>={CadastroPasso2Screen} <span class="tag-name">/&gt;</span>
+        <span class="tag-name">&lt;Stack.Screen</span> <span class="prop">name</span>=<span class="str">"CadastroPasso3"</span> <span class="prop">component</span>={CadastroPasso3Screen} <span class="tag-name">/&gt;</span>
+      <span class="tag-name">&lt;/Stack.Navigator&gt;</span>
+    <span class="tag-name">&lt;/NavigationContainer&gt;</span>
+  );
+}</code></pre>
+    <h3>Como funciona a pilha de navegação?</h3>
+    <div class="diagram">Estado inicial:      Após navegar:         Após popToTop():
+┌─────────────┐      ┌─────────────┐       ┌─────────────┐
+│   Login     │  →   │  Passo 3    │  →    │   Login     │
+└─────────────┘      │  Passo 2    │       └─────────────┘
+                     │  Passo 1    │
+                     │   Login     │
+                     └─────────────┘</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Método</th><th>O que faz</th></tr></thead>
+        <tbody>
+          <tr><td><code>navigation.navigate('Nome', {params})</code></td><td>Vai para uma tela, passando dados opcionais</td></tr>
+          <tr><td><code>navigation.goBack()</code></td><td>Volta para a tela anterior (remove o topo da pilha)</td></tr>
+          <tr><td><code>navigation.popToTop()</code></td><td>Volta para a primeira tela (esvazia toda a pilha)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ─── SEÇÃO 9.1 ─── -->
+  <section class="section" id="s9-1">
+    <div class="section-header">
+      <div class="section-num">9.1</div>
+      <h2>Tela — LoginScreen.jsx</h2>
+    </div>
+    <pre><code><span class="kw">import</span> React, { useState } <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { View, Text, StyleSheet, TouchableOpacity, Alert } <span class="kw">from</span> <span class="str">'react-native'</span>;
+<span class="kw">import</span> ScreenContainer <span class="kw">from</span> <span class="str">'../components/ScreenContainer'</span>;
+<span class="kw">import</span> Logo <span class="kw">from</span> <span class="str">'../components/Logo'</span>;
+<span class="kw">import</span> Input <span class="kw">from</span> <span class="str">'../components/Input'</span>;
+<span class="kw">import</span> Button <span class="kw">from</span> <span class="str">'../components/Button'</span>;
+<span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
+<span class="kw">import</span> { isValidEmail } <span class="kw">from</span> <span class="str">'../utils/masks'</span>;
+
+<span class="cm">// "navigation" é injetado automaticamente pelo React Navigation</span>
+<span class="kw">export default function</span> <span class="fn">LoginScreen</span>({ navigation }) {
+
+  <span class="cm">// Estado de cada campo do formulário</span>
+  <span class="kw">const</span> [email, setEmail] = <span class="fn">useState</span>(<span class="str">''</span>);   <span class="cm">// Campo de email (começa vazio)</span>
+  <span class="kw">const</span> [senha, setSenha] = <span class="fn">useState</span>(<span class="str">''</span>);   <span class="cm">// Campo de senha (começa vazio)</span>
+  <span class="kw">const</span> [errors, setErrors] = <span class="fn">useState</span>({});<span class="cm">// Objeto com erros por campo</span>
+
+  <span class="kw">const</span> <span class="fn">handleLogin</span> = () => {
+    <span class="kw">const</span> newErrors = {};  <span class="cm">// Objeto vazio a cada nova tentativa</span>
+
+    <span class="kw">if</span> (!email.<span class="fn">trim</span>())          newErrors.email = <span class="str">'Informe seu email'</span>;
+    <span class="kw">else if</span> (!<span class="fn">isValidEmail</span>(email)) newErrors.email = <span class="str">'Email inválido'</span>;
+    <span class="cm">// .trim() remove espaços das extremidades antes de checar se está vazio</span>
+
+    <span class="kw">if</span> (!senha) newErrors.senha = <span class="str">'Informe sua senha'</span>;
+
+    <span class="fn">setErrors</span>(newErrors); <span class="cm">// Atualiza erros → Input exibe as mensagens</span>
+
+    <span class="kw">if</span> (Object.<span class="fn">keys</span>(newErrors).length === <span class="num">0</span>) {
+      <span class="cm">// Object.keys retorna as chaves do objeto</span>
+      <span class="cm">// Length === 0 → sem erros → pode prosseguir</span>
+      <span class="cm">// ⬇ Ponto de integração: chamar API de login aqui</span>
+      Alert.<span class="fn">alert</span>(<span class="str">'Login'</span>, <span class="str">'Login realizado com sucesso!'</span>);
+    }
+  };
+
+  <span class="kw">return</span> (
+    <span class="tag-name">&lt;ScreenContainer&gt;</span>
+      <span class="tag-name">&lt;View</span> <span class="prop">style</span>={styles.logoWrap}<span class="tag-name">&gt;</span>
+        <span class="tag-name">&lt;Logo</span> <span class="prop">size</span>={<span class="num">36</span>} <span class="tag-name">/&gt;</span>                         <span class="cm">// Logo maior na tela principal</span>
+      <span class="tag-name">&lt;/View&gt;</span>
+
+      <span class="tag-name">&lt;Text</span> <span class="prop">style</span>={styles.title}<span class="tag-name">&gt;</span>Faça login em sua conta<span class="tag-name">&lt;/Text&gt;</span>
+
+      <span class="tag-name">&lt;View</span> <span class="prop">style</span>={styles.form}<span class="tag-name">&gt;</span>
+        <span class="tag-name">&lt;Input</span>
+          <span class="prop">label</span>=<span class="str">"Email"</span>
+          <span class="prop">placeholder</span>=<span class="str">"Insira seu endereço de email"</span>
+          <span class="prop">value</span>={email}
+          <span class="prop">onChangeText</span>={(v) => <span class="fn">setEmail</span>(v)}
+          <span class="prop">keyboardType</span>=<span class="str">"email-address"</span>          <span class="cm">// Teclado com @ em destaque</span>
+          <span class="prop">autoCapitalize</span>=<span class="str">"none"</span>                 <span class="cm">// Sem capitalização em emails</span>
+          <span class="prop">error</span>={errors.email}
+        <span class="tag-name">/&gt;</span>
+        <span class="tag-name">&lt;Input</span>
+          <span class="prop">label</span>=<span class="str">"Senha"</span>
+          <span class="prop">value</span>={senha}
+          <span class="prop">onChangeText</span>={setSenha}               <span class="cm">// Atalho: passa a função setState direto</span>
+          <span class="prop">secureTextEntry</span>                        <span class="cm">// Oculta os caracteres digitados</span>
+          <span class="prop">error</span>={errors.senha}
+        <span class="tag-name">/&gt;</span>
+        <span class="tag-name">&lt;Button</span> <span class="prop">title</span>=<span class="str">"Entrar"</span> <span class="prop">onPress</span>={handleLogin} <span class="tag-name">/&gt;</span>
+
+        <span class="tag-name">&lt;TouchableOpacity</span> <span class="prop">style</span>={styles.linkWrap}
+          <span class="prop">onPress</span>={() => Alert.<span class="fn">alert</span>(<span class="str">'Recuperar senha'</span>, <span class="str">'Fluxo de recuperação.'</span>)}<span class="tag-name">&gt;</span>
+          <span class="tag-name">&lt;Text</span> <span class="prop">style</span>={styles.linkUnderline}<span class="tag-name">&gt;</span>Esqueceu sua senha?<span class="tag-name">&lt;/Text&gt;</span>
+        <span class="tag-name">&lt;/TouchableOpacity&gt;</span>
+      <span class="tag-name">&lt;/View&gt;</span>
+
+      <span class="tag-name">&lt;View</span> <span class="prop">style</span>={styles.footer}<span class="tag-name">&gt;</span>
+        <span class="tag-name">&lt;Text</span> <span class="prop">style</span>={styles.footerText}<span class="tag-name">&gt;</span>
+          Ainda não tem conta?{<span class="str">' '</span>}         <span class="cm">// {' '} insere espaço em branco no JSX</span>
+          <span class="tag-name">&lt;Text</span>
+            <span class="prop">style</span>={styles.footerLink}
+            <span class="prop">onPress</span>={() => navigation.<span class="fn">navigate</span>(<span class="str">'CadastroPasso1'</span>)}
+            <span class="cm">// Navega sem parâmetros → Passo1 inicia com campos vazios</span>
+          <span class="tag-name">&gt;</span>
+            Faça seu cadastro!
+          <span class="tag-name">&lt;/Text&gt;</span>
+        <span class="tag-name">&lt;/Text&gt;</span>
+      <span class="tag-name">&lt;/View&gt;</span>
+    <span class="tag-name">&lt;/ScreenContainer&gt;</span>
+  );
+}</code></pre>
+  </section>
+
+  <!-- ─── SEÇÃO 9.2 ─── -->
+  <section class="section" id="s9-2">
+    <div class="section-header">
+      <div class="section-num">9.2</div>
+      <h2>Tela — CadastroPasso1Screen.jsx</h2>
+    </div>
+    <pre><code><span class="kw">export default function</span> <span class="fn">CadastroPasso1Screen</span>({ navigation, route }) {
+
+  <span class="cm">// Recupera dados anteriores se o usuário voltou desta tela</span>
+  <span class="cm">// route?.params?.dados → acesso seguro com optional chaining</span>
+  <span class="cm">// || {} → usa objeto vazio se não houver dados anteriores</span>
+  <span class="kw">const</span> prev = route?.params?.dados || {};
+
+  <span class="cm">// Cada campo inicia com o valor anterior (se voltar) ou vazio (primeiro acesso)</span>
+  <span class="kw">const</span> [nome, setNome] = <span class="fn">useState</span>(prev.nome || <span class="str">''</span>);
+  <span class="kw">const</span> [email, setEmail] = <span class="fn">useState</span>(prev.email || <span class="str">''</span>);
+  <span class="kw">const</span> [senha, setSenha] = <span class="fn">useState</span>(prev.senha || <span class="str">''</span>);
+  <span class="kw">const</span> [repetirSenha, setRepetirSenha] = <span class="fn">useState</span>(prev.repetirSenha || <span class="str">''</span>);
+  <span class="kw">const</span> [errors, setErrors] = <span class="fn">useState</span>({});
+
+  <span class="kw">const</span> <span class="fn">validar</span> = () => {
+    <span class="kw">const</span> e = {};
+
+    <span class="kw">if</span> (!nome.<span class="fn">trim</span>())
+      e.nome = <span class="str">'Informe seu nome'</span>;
+    <span class="kw">else if</span> (nome.<span class="fn">trim</span>().<span class="fn">split</span>(<span class="str">' '</span>).length < <span class="num">2</span>)
+      e.nome = <span class="str">'Digite seu nome completo'</span>;
+      <span class="cm">// .split(' ') → ['João'] (1 palavra) ou ['João', 'Silva'] (2 palavras)</span>
+      <span class="cm">// length < 2 → exige pelo menos 2 palavras (nome completo)</span>
+
+    <span class="kw">if</span> (!email.<span class="fn">trim</span>()) e.email = <span class="str">'Informe seu email'</span>;
+    <span class="kw">else if</span> (!<span class="fn">isValidEmail</span>(email)) e.email = <span class="str">'Email inválido'</span>;
+
+    <span class="kw">if</span> (!senha) e.senha = <span class="str">'Informe uma senha'</span>;
+    <span class="kw">else if</span> (senha.length < <span class="num">6</span>) e.senha = <span class="str">'A senha deve ter pelo menos 6 caracteres'</span>;
+
+    <span class="kw">if</span> (!repetirSenha) e.repetirSenha = <span class="str">'Confirme a senha'</span>;
+    <span class="kw">else if</span> (repetirSenha !== senha) e.repetirSenha = <span class="str">'As senhas não coincidem'</span>;
+    <span class="cm">// !== compara valor E tipo (comparação estrita)</span>
+
+    <span class="fn">setErrors</span>(e);
+    <span class="kw">return</span> Object.<span class="fn">keys</span>(e).length === <span class="num">0</span>; <span class="cm">// true se não há erros</span>
+  };
+
+  <span class="kw">const</span> <span class="fn">handleAvancar</span> = () => {
+    <span class="kw">if</span> (!<span class="fn">validar</span>()) <span class="kw">return</span>; <span class="cm">// Interrompe se houver erro</span>
+
+    navigation.<span class="fn">navigate</span>(<span class="str">'CadastroPasso2'</span>, {
+      <span class="prop">dados</span>: { nome, email, senha, repetirSenha },
+      <span class="cm">// Passo2 receberá isso em route.params.dados</span>
+    });
+  };
+
+  <span class="cm">// ... JSX com 4 Inputs e 1 Button "Avançar"</span>
+}</code></pre>
+  </section>
+
+  <!-- ─── SEÇÃO 9.3 ─── -->
+  <section class="section" id="s9-3">
+    <div class="section-header">
+      <div class="section-num">9.3</div>
+      <h2>Tela — CadastroPasso2Screen.jsx</h2>
+    </div>
+    <pre><code><span class="kw">import</span> { CEP_MASK, PHONE_MASK, isValidCEP, isValidPhone } <span class="kw">from</span> <span class="str">'../utils/masks'</span>;
+
+<span class="kw">export default function</span> <span class="fn">CadastroPasso2Screen</span>({ navigation, route }) {
+  <span class="kw">const</span> dadosPasso1 = route?.params?.dados || {};    <span class="cm">// Dados do Passo 1 — repassados ao Passo 3</span>
+  <span class="kw">const</span> prev        = route?.params?.endereco || {}; <span class="cm">// Dados de endereço se o usuário voltou</span>
+
+  <span class="kw">const</span> [cep, setCep] = <span class="fn">useState</span>(prev.cep || <span class="str">''</span>);
+  <span class="kw">const</span> [endereco, setEndereco] = <span class="fn">useState</span>(prev.endereco || <span class="str">''</span>);
+  <span class="kw">const</span> [numero, setNumero] = <span class="fn">useState</span>(prev.numero || <span class="str">''</span>);
+  <span class="kw">const</span> [complemento, setComplemento] = <span class="fn">useState</span>(prev.complemento || <span class="str">''</span>);
+  <span class="cm">// complemento é opcional — não tem validação obrigatória</span>
+  <span class="kw">const</span> [telefone, setTelefone] = <span class="fn">useState</span>(prev.telefone || <span class="str">''</span>);
+  <span class="kw">const</span> [errors, setErrors] = <span class="fn">useState</span>({});
+
+  <span class="kw">const</span> <span class="fn">validar</span> = () => {
+    <span class="kw">const</span> e = {};
+    <span class="kw">if</span> (!cep.<span class="fn">trim</span>())          e.cep = <span class="str">'Informe seu CEP'</span>;
+    <span class="kw">else if</span> (!<span class="fn">isValidCEP</span>(cep)) e.cep = <span class="str">'CEP inválido'</span>;
+    <span class="cm">// isValidCEP: remove a máscara e confere se há 8 dígitos</span>
+
+    <span class="kw">if</span> (!endereco.<span class="fn">trim</span>())  e.endereco = <span class="str">'Informe seu endereço'</span>;
+    <span class="kw">if</span> (!numero.<span class="fn">trim</span>())    e.numero   = <span class="str">'Informe o número'</span>;
+    <span class="cm">// complemento → sem validação (campo opcional)</span>
+
+    <span class="kw">if</span> (!telefone.<span class="fn">trim</span>())          e.telefone = <span class="str">'Informe seu telefone'</span>;
+    <span class="kw">else if</span> (!<span class="fn">isValidPhone</span>(telefone)) e.telefone = <span class="str">'Telefone inválido'</span>;
+
+    <span class="fn">setErrors</span>(e);
+    <span class="kw">return</span> Object.<span class="fn">keys</span>(e).length === <span class="num">0</span>;
+  };
+
+  <span class="kw">const</span> <span class="fn">handleAvancar</span> = () => {
+    <span class="kw">if</span> (!<span class="fn">validar</span>()) <span class="kw">return</span>;
+    navigation.<span class="fn">navigate</span>(<span class="str">'CadastroPasso3'</span>, {
+      <span class="prop">dados</span>: dadosPasso1,                               <span class="cm">// Repassa dados do Passo 1 intactos</span>
+      <span class="prop">endereco</span>: { cep, endereco, numero, complemento, telefone }, <span class="cm">// Novos dados</span>
+    });
+  };
+
+  <span class="cm">// No JSX: dois campos com máscara (CEP e telefone) e dois botões (Voltar + Avançar)</span>
+  <span class="tag-name">&lt;Input</span>
+    <span class="prop">label</span>=<span class="str">"CEP"</span>
+    <span class="prop">value</span>={cep}
+    <span class="prop">onChangeText</span>={(masked) => <span class="fn">setCep</span>(masked)} <span class="cm">// Usa só o valor mascarado</span>
+    <span class="prop">mask</span>={CEP_MASK}          <span class="cm">// Formata como "00000-000"</span>
+    <span class="prop">keyboardType</span>=<span class="str">"numeric"</span>  <span class="cm">// Teclado numérico</span>
+    <span class="prop">error</span>={errors.cep}
+  <span class="tag-name">/&gt;</span>
+}</code></pre>
+  </section>
+
+  <!-- ─── SEÇÃO 9.4 ─── -->
+  <section class="section" id="s9-4">
+    <div class="section-header">
+      <div class="section-num">9.4</div>
+      <h2>Tela — CadastroPasso3Screen.jsx</h2>
+    </div>
+    <pre><code><span class="cm">// Lista fixa fora do componente — não é recriada a cada render</span>
+<span class="kw">const</span> PLANOS = [
+  <span class="str">'Sulamerica'</span>, <span class="str">'Unimed'</span>, <span class="str">'Bradesco'</span>, <span class="str">'Amil'</span>,
+  <span class="str">'Biosaúde'</span>, <span class="str">'Biovida'</span>, <span class="str">'Outros'</span>, <span class="str">'Não tenho plano'</span>,
+];
+
+<span class="kw">export default function</span> <span class="fn">CadastroPasso3Screen</span>({ navigation, route }) {
+  <span class="kw">const</span> dadosPasso1 = route?.params?.dados || {};     <span class="cm">// nome, email, senha, repetirSenha</span>
+  <span class="kw">const</span> endereco    = route?.params?.endereco || {};  <span class="cm">// cep, logradouro, numero, etc.</span>
+
+  <span class="kw">const</span> [selecionados, setSelecionados] = <span class="fn">useState</span>([]); <span class="cm">// Array de nomes selecionados</span>
+  <span class="kw">const</span> [erro, setErro] = <span class="fn">useState</span>(<span class="str">''</span>);                <span class="cm">// Erro global (string simples)</span>
+
+  <span class="cm">// Lógica de toggle: marcar/desmarcar um plano</span>
+  <span class="kw">const</span> <span class="fn">toggle</span> = (plano) => {
+    <span class="fn">setErro</span>(<span class="str">''</span>); <span class="cm">// Limpa erro ao interagir</span>
+
+    <span class="cm">// "Não tenho plano" é exclusivo: deseleciona todos os outros</span>
+    <span class="kw">if</span> (plano === <span class="str">'Não tenho plano'</span>) {
+      <span class="fn">setSelecionados</span>(selecionados.<span class="fn">includes</span>(plano) ? [] : [plano]);
+      <span class="cm">// Se já marcado → desmarca (array vazio) | Se não marcado → seleciona só ele</span>
+      <span class="kw">return</span>; <span class="cm">// Não executa o código abaixo</span>
+    }
+
+    <span class="cm">// Para outros planos: remove "Não tenho plano" se estava marcado</span>
+    <span class="kw">const</span> semSemPlano = selecionados.<span class="fn">filter</span>((p) => p !== <span class="str">'Não tenho plano'</span>);
+    <span class="cm">// .filter cria novo array mantendo só os que passam no teste</span>
+
+    <span class="kw">if</span> (semSemPlano.<span class="fn">includes</span>(plano)) {
+      <span class="fn">setSelecionados</span>(semSemPlano.<span class="fn">filter</span>((p) => p !== plano)); <span class="cm">// DESMARCA</span>
+    } <span class="kw">else</span> {
+      <span class="fn">setSelecionados</span>([...semSemPlano, plano]); <span class="cm">// MARCA — spread cria novo array</span>
+    }
+  };
+
+  <span class="kw">const</span> <span class="fn">handleCadastrar</span> = () => {
+    <span class="kw">if</span> (selecionados.length === <span class="num">0</span>) {
+      <span class="fn">setErro</span>(<span class="str">'Selecione pelo menos uma opção'</span>);
+      <span class="kw">return</span>;
+    }
+
+    <span class="cm">// Monta o payload final com TODOS os dados das 3 telas</span>
+    <span class="kw">const</span> payload = {
+      ...dadosPasso1,         <span class="cm">// Espalha: nome, email, senha, repetirSenha</span>
+      endereco,               <span class="cm">// Objeto completo de endereço</span>
+      <span class="prop">planos</span>: selecionados,   <span class="cm">// Array dos planos escolhidos</span>
+    };
+    <span class="cm">// ⬇ Ponto de integração: chamar API aqui com o payload</span>
+    console.<span class="fn">log</span>(<span class="str">'Cadastro enviado:'</span>, payload);
+
+    Alert.<span class="fn">alert</span>(<span class="str">'Cadastro'</span>, <span class="str">'Cadastro realizado com sucesso!'</span>, [
+      { <span class="prop">text</span>: <span class="str">'OK'</span>, <span class="prop">onPress</span>: () => navigation.<span class="fn">popToTop</span>() },
+      <span class="cm">// popToTop: remove todas as telas da pilha exceto a primeira (Login)</span>
+    ]);
+  };
+
+  <span class="kw">return</span> (
+    <span class="tag-name">&lt;ScreenContainer</span> <span class="prop">dark</span><span class="tag-name">&gt;</span>          <span class="cm">// Fundo preto na tela de planos</span>
+      ...
+      <span class="cm">// Lista de checkboxes gerada pelo .map() sobre o array PLANOS</span>
+      {PLANOS.<span class="fn">map</span>((plano) => (
+        <span class="tag-name">&lt;Checkbox</span>
+          <span class="prop">key</span>={plano}                             <span class="cm">// Identificador único obrigatório</span>
+          <span class="prop">label</span>={plano}
+          <span class="prop">checked</span>={selecionados.<span class="fn">includes</span>(plano)} <span class="cm">// true se está no array</span>
+          <span class="prop">onPress</span>={() => <span class="fn">toggle</span>(plano)}
+          <span class="prop">onDark</span>                                  <span class="cm">// Estilo para fundo escuro</span>
+        <span class="tag-name">/&gt;</span>
+      ))}
+    <span class="tag-name">&lt;/ScreenContainer&gt;</span>
+  );
+}</code></pre>
+  </section>
+
+  <!-- ─── SEÇÃO 10 ─── -->
+  <section class="section" id="s10">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <h2>Fluxo de dados entre telas</h2>
+    </div>
+    <div class="diagram">┌──────────────────────────────────────────────────────────────────┐
+│                         LoginScreen                              │
+│  [sem dados — ponto de entrada]                                  │
+│                                                                  │
+│  navigation.navigate('CadastroPasso1')  ──────────────────────┐ │
+└───────────────────────────────────────────────────────────────┼─┘
+                                                                │
+┌───────────────────────────────────────────────────────────────▼─┐
+│                    CadastroPasso1Screen                          │
+│  route.params?.dados → recupera dados se usuário voltou         │
+│                                                                  │
+│  Coleta: nome, email, senha, repetirSenha                        │
+│                                                                  │
+│  navigation.navigate('CadastroPasso2', {                         │
+│    dados: { nome, email, senha, repetirSenha }                   │
+│  })  ──────────────────────────────────────────────────────────┐ │
+└────────────────────────────────────────────────────────────────┼─┘
+                                                                 │
+┌────────────────────────────────────────────────────────────────▼─┐
+│                    CadastroPasso2Screen                           │
+│  route.params.dados   → dados do Passo 1 (guardados)             │
+│  route.params.endereco → recupera endereço se voltou             │
+│                                                                   │
+│  Coleta: cep, endereco, numero, complemento, telefone             │
+│                                                                   │
+│  navigation.navigate('CadastroPasso3', {                          │
+│    dados: dadosPasso1,        ← repassa sem alterar              │
+│    endereco: { cep, ... }     ← dados novos desta tela           │
+│  })  ───────────────────────────────────────────────────────────┐ │
+└─────────────────────────────────────────────────────────────────┼─┘
+                                                                  │
+┌─────────────────────────────────────────────────────────────────▼─┐
+│                    CadastroPasso3Screen                            │
+│  route.params.dados    → nome, email, senha, repetirSenha         │
+│  route.params.endereco → cep, endereco, numero, etc.              │
+│                                                                    │
+│  Coleta: planos (array de strings)                                 │
+│                                                                    │
+│  payload = { ...dados, endereco, planos }  ← combina tudo         │
+│  console.log(payload) → pronto para enviar à API                   │
+│                                                                    │
+│  navigation.popToTop()  →  volta para o Login                      │
+└────────────────────────────────────────────────────────────────────┘</div>
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <div><strong>Por que não usar estado global (Redux, Context)?</strong> Neste projeto, a transferência via <code>route.params</code> é suficiente porque o fluxo é linear e os dados só importam durante o cadastro. Para apps maiores, onde múltiplas telas não relacionadas precisam dos mesmos dados, usaríamos Context API ou Redux.</div>
+    </div>
+  </section>
+
+  <!-- ─── SEÇÃO 11 ─── -->
+  <section class="section" id="s11">
+    <div class="section-header">
+      <div class="section-num">11</div>
+      <h2>Conceitos fundamentais utilizados</h2>
+    </div>
+
+    <h3>useState — Gerenciamento de estado local</h3>
+    <pre><code><span class="kw">const</span> [valor, setValor] = <span class="fn">useState</span>(<span class="str">'inicial'</span>);
+<span class="cm">// valor   → lê o estado atual</span>
+<span class="cm">// setValor → atualiza e causa novo render</span>
+<span class="cm">// 'inicial' → valor no primeiro render</span>
+
+<span class="fn">setValor</span>(<span class="str">'novo'</span>); <span class="cm">// → componente re-renderiza com "novo"</span></code></pre>
+
+    <h3>Renderização condicional</h3>
+    <pre><code><span class="cm">// Forma 1: ternário (se/senão)</span>
+{error ? <span class="tag-name">&lt;Text&gt;</span>{error}<span class="tag-name">&lt;/Text&gt;</span> : <span class="bool">null</span>}
+
+<span class="cm">// Forma 2: curto-circuito (só renderiza se error for verdadeiro)</span>
+{error &amp;&amp; <span class="tag-name">&lt;Text&gt;</span>{error}<span class="tag-name">&lt;/Text&gt;</span>}
+
+<span class="cm">// Forma 3: array de estilos condicionais</span>
+<span class="prop">style</span>={[styles.base, error &amp;&amp; styles.inputError]}
+<span class="cm">// Se error for falsy (null, undefined, ''), inputError é ignorado</span></code></pre>
+
+    <h3>Optional Chaining (?.) e Nullish Coalescing (||)</h3>
+    <pre><code><span class="kw">const</span> prev = route?.params?.dados || {};
+<span class="cm">// route?.params → se route for null/undefined, retorna undefined (sem erro)</span>
+<span class="cm">// ?.dados → se params for null/undefined, retorna undefined</span>
+<span class="cm">// || {} → se o resultado for falsy, usa objeto vazio como fallback</span></code></pre>
+
+    <h3>Spread Operator (...)</h3>
+    <pre><code><span class="cm">// Em objetos: copia todas as propriedades</span>
+<span class="kw">const</span> payload = { ...dadosPasso1, endereco, planos: selecionados };
+<span class="cm">// Resultado: { nome, email, senha, repetirSenha, endereco: {...}, planos: [...] }</span>
+
+<span class="cm">// Em arrays: cria novo array com os itens anteriores + novo</span>
+<span class="kw">const</span> novoArray = [...anterior, novoItem];</code></pre>
+
+    <h3>Array.map() para listas dinâmicas</h3>
+    <pre><code>{PLANOS.<span class="fn">map</span>((plano) => (
+  <span class="tag-name">&lt;Checkbox</span>
+    <span class="prop">key</span>={plano}       <span class="cm">// Obrigatório: identifica cada item da lista para o React</span>
+    <span class="prop">label</span>={plano}
+    <span class="prop">checked</span>={selecionados.<span class="fn">includes</span>(plano)}
+    <span class="prop">onPress</span>={() => <span class="fn">toggle</span>(plano)}
+  <span class="tag-name">/&gt;</span>
+))}</code></pre>
+
+    <h3>Flexbox no React Native</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>CSS Web</th><th>React Native</th></tr></thead>
+        <tbody>
+          <tr><td><code>flex-direction: row</code> (padrão web)</td><td><code>flexDirection: 'column'</code> (padrão RN)</td></tr>
+          <tr><td>Aceita porcentagens e <code>px</code></td><td>Só aceita números (density-independent pixels)</td></tr>
+          <tr><td><code>display: flex</code> é opt-in</td><td>Todos os elementos já são flex por padrão</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ─── SEÇÃO 12 ─── -->
+  <section class="section" id="s12">
+    <div class="section-header">
+      <div class="section-num">12</div>
+      <h2>Diagrama geral da arquitetura</h2>
+    </div>
+    <div class="diagram">┌────────────────────────────────────────────┐
+│                  index.js                  │
+│           registerRootComponent            │
+└──────────────────┬─────────────────────────┘
+                   │
+┌──────────────────▼─────────────────────────┐
+│                  App.jsx                   │
+│         SafeAreaProvider                   │
+│         StatusBar                          │
+│         AppNavigator                       │
+└──────────────────┬─────────────────────────┘
+                   │
+┌──────────────────▼─────────────────────────┐
+│             AppNavigator.jsx               │
+│      NavigationContainer (contexto)        │
+│      Stack.Navigator                       │
+│        ├── Login                           │
+│        ├── CadastroPasso1                 │
+│        ├── CadastroPasso2                 │
+│        └── CadastroPasso3                 │
+└──────────┬─────────────────────────────────┘
+           │  (cada rota renderiza uma Screen)
+           │
+┌──────────▼─────────────────────────────────┐
+│              Screens (Telas)               │
+│  ┌─────────────────────────────────────┐   │
+│  │ ScreenContainer (wrapper de todas)  │   │
+│  │  ├── SafeAreaView                   │   │
+│  │  ├── KeyboardAvoidingView           │   │
+│  │  └── ScrollView                     │   │
+│  └─────────────────────────────────────┘   │
+│                                            │
+│  Componentes usados dentro das telas:      │
+│  ┌────────┐ ┌───────┐ ┌──────┐ ┌────────┐ │
+│  │  Logo  │ │ Input │ │Button│ │Checkbox│ │
+│  └────────┘ └───────┘ └──────┘ └────────┘ │
+└───────────────┬────────────────────────────┘
+                │
+┌───────────────▼────────────────────────────┐
+│           Camada de Suporte                │
+│   theme/colors.js  → paleta de cores       │
+│   utils/masks.js   → máscaras e validações │
+└────────────────────────────────────────────┘</div>
+
+    <h3>Resumo dos conceitos por arquivo</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Conceito</th><th>Onde é usado</th></tr></thead>
+        <tbody>
+          <tr><td>Componentes funcionais</td><td>Todos os arquivos .jsx</td></tr>
+          <tr><td>useState (estado local)</td><td>Todas as telas e componentes</td></tr>
+          <tr><td>Props e composição</td><td>Button, Input, Checkbox, Logo, ScreenContainer</td></tr>
+          <tr><td>React Navigation (Stack)</td><td>AppNavigator.jsx</td></tr>
+          <tr><td>Passagem de dados entre telas</td><td>route.params em todas as telas de cadastro</td></tr>
+          <tr><td>Validação de formulário</td><td>handleLogin, validar() em cada tela</td></tr>
+          <tr><td>Máscaras de input</td><td>Input.jsx + MaskInput (CEP e Telefone)</td></tr>
+          <tr><td>Regex para validação</td><td>isValidEmail, isValidCEP, isValidPhone</td></tr>
+          <tr><td>Renderização condicional</td><td>Erros, labels, spinner do botão</td></tr>
+          <tr><td>StyleSheet e Flexbox</td><td>Todos os arquivos</td></tr>
+          <tr><td>Tema centralizado</td><td>theme/colors.js usado por todos</td></tr>
+          <tr><td>SVG em React Native</td><td>Logo.jsx com react-native-svg</td></tr>
+          <tr><td>Safe Area / Keyboard Avoid</td><td>ScreenContainer.jsx</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">🚀</span>
+      <div>
+        <strong>Próximos passos sugeridos para evoluir o projeto:</strong>
+        <ul style="margin-top:8px">
+          <li>Integrar com uma API real (fetch/axios) nos pontos marcados com comentários</li>
+          <li>Adicionar <code>AsyncStorage</code> para manter o usuário logado</li>
+          <li>Implementar <strong>Context API</strong> para gerenciar o estado do usuário autenticado</li>
+          <li>Adicionar tratamento de erros de rede (try/catch, estados de loading)</li>
+          <li>Criar uma tela <strong>Home</strong> para usuários logados</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+  // Highlight de link ativo na sidebar conforme scroll
+  const links = document.querySelectorAll('.sidebar nav a');
+  const sections = [...links].map(l => document.querySelector(l.getAttribute('href')));
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = [...links].find(l => l.getAttribute('href') === '#' + e.target.id);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => s && obs.observe(s));
+</script>
+</body>
+</html>
