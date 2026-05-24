@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apostila — App Voll em React Native com Expo</title>
   <style>
     /* ── Reset e base ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --blue-dark:  #0B3B60;
-      --blue-light: #2196F3;
-      --bg:         #f8f9fb;
-      --surface:    #ffffff;
-      --border:     #e2e8f0;
-      --text:       #1e2a38;
-      --muted:      #64748b;
-      --code-bg:    #0f1723;
-      --code-text:  #e2e8f0;
-      --green:      #22c55e;
-      --red:        #ef4444;
-      --yellow:     #f59e0b;
-      --purple:     #a855f7;
-      --sidebar-w:  270px;
-      --radius:     10px;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    html { scroll-behavior: smooth; }
+    :root {
+      --blue-dark: #0B3B60;
+      --blue-light: #2196F3;
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e2a38;
+      --muted: #64748b;
+      --code-bg: #0f1723;
+      --code-text: #e2e8f0;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --purple: #a855f7;
+      --sidebar-w: 270px;
+      --radius: 10px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -37,7 +46,10 @@
     }
 
     /* ── Layout ── */
-    .layout { display: flex; min-height: 100vh; }
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
 
     /* ── Sidebar ── */
     .sidebar {
@@ -45,7 +57,9 @@
       background: var(--blue-dark);
       color: #cbd5e1;
       position: fixed;
-      top: 0; left: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      bottom: 0;
       overflow-y: auto;
       padding: 24px 0;
       z-index: 100;
@@ -56,17 +70,29 @@
       align-items: center;
       gap: 10px;
       padding: 0 20px 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       margin-bottom: 16px;
     }
+
     .sidebar-logo .icon {
-      width: 32px; height: 32px;
+      width: 32px;
+      height: 32px;
       background: var(--blue-light);
       border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 900; color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
     }
-    .sidebar-logo span { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; }
+
+    .sidebar-logo span {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+    }
 
     .sidebar nav a {
       display: block;
@@ -77,12 +103,14 @@
       border-left: 3px solid transparent;
       transition: all .18s;
     }
+
     .sidebar nav a:hover,
     .sidebar nav a.active {
       color: #fff;
-      background: rgba(255,255,255,0.07);
+      background: rgba(255, 255, 255, 0.07);
       border-left-color: var(--blue-light);
     }
+
     .sidebar nav .section-title {
       padding: 14px 20px 4px;
       font-size: 10px;
@@ -108,9 +136,10 @@
       color: #fff;
       margin-bottom: 48px;
     }
+
     .hero-badge {
       display: inline-block;
-      background: rgba(33,150,243,.35);
+      background: rgba(33, 150, 243, .35);
       color: var(--blue-light);
       font-size: 11px;
       font-weight: 700;
@@ -119,18 +148,36 @@
       padding: 4px 12px;
       border-radius: 20px;
       margin-bottom: 16px;
-      border: 1px solid rgba(33,150,243,.4);
+      border: 1px solid rgba(33, 150, 243, .4);
     }
-    .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
-    .hero p { color: #94a3b8; font-size: 16px; max-width: 600px; }
-    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+
+    .hero h1 {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: #94a3b8;
+      font-size: 16px;
+      max-width: 600px;
+    }
+
+    .hero-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
     .tag {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       color: #cbd5e1;
       font-size: 12px;
       padding: 4px 10px;
       border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     /* ── Sections ── */
@@ -151,15 +198,26 @@
       padding-bottom: 20px;
       border-bottom: 2px solid var(--border);
     }
+
     .section-num {
-      width: 36px; height: 36px; min-width: 36px;
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
       background: var(--blue-dark);
       color: #fff;
       border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
     }
-    .section h2 { font-size: 22px; font-weight: 700; color: var(--blue-dark); }
+
+    .section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--blue-dark);
+    }
 
     h3 {
       font-size: 17px;
@@ -179,9 +237,19 @@
       margin: 22px 0 8px;
     }
 
-    p { margin-bottom: 14px; }
-    ul, ol { padding-left: 20px; margin-bottom: 14px; }
-    li { margin-bottom: 6px; }
+    p {
+      margin-bottom: 14px;
+    }
+
+    ul,
+    ol {
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
 
     /* ── Código ── */
     pre {
@@ -193,6 +261,7 @@
       position: relative;
       border: 1px solid #1e2d3d;
     }
+
     pre code {
       font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
       font-size: 13px;
@@ -203,15 +272,52 @@
     }
 
     /* Syntax highlighting leve */
-    .kw  { color: #79b8ff; }   /* keywords: import, export, const, if, return */
-    .fn  { color: #b392f0; }   /* functions */
-    .str { color: #9ecbff; }   /* strings */
-    .num { color: #f8c555; }   /* numbers */
-    .cm  { color: #6a737d; font-style: italic; }  /* comments */
-    .prop{ color: #ffab70; }   /* props / object keys */
-    .tag-name { color: #85e89d; } /* JSX tags */
-    .bool{ color: #f97583; }   /* true/false/null */
-    .rx  { color: #fdaeb7; }   /* regex */
+    .kw {
+      color: #79b8ff;
+    }
+
+    /* keywords: import, export, const, if, return */
+    .fn {
+      color: #b392f0;
+    }
+
+    /* functions */
+    .str {
+      color: #9ecbff;
+    }
+
+    /* strings */
+    .num {
+      color: #f8c555;
+    }
+
+    /* numbers */
+    .cm {
+      color: #6a737d;
+      font-style: italic;
+    }
+
+    /* comments */
+    .prop {
+      color: #ffab70;
+    }
+
+    /* props / object keys */
+    .tag-name {
+      color: #85e89d;
+    }
+
+    /* JSX tags */
+    .bool {
+      color: #f97583;
+    }
+
+    /* true/false/null */
+    .rx {
+      color: #fdaeb7;
+    }
+
+    /* regex */
 
     code:not(pre code) {
       background: #eef2ff;
@@ -224,8 +330,17 @@
     }
 
     /* ── Tabelas ── */
-    .table-wrap { overflow-x: auto; margin: 18px 0; }
-    table { border-collapse: collapse; width: 100%; font-size: 14px; }
+    .table-wrap {
+      overflow-x: auto;
+      margin: 18px 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 14px;
+    }
+
     th {
       background: var(--blue-dark);
       color: #fff;
@@ -233,9 +348,19 @@
       text-align: left;
       font-weight: 600;
     }
-    td { padding: 9px 16px; border-bottom: 1px solid var(--border); }
-    tr:hover td { background: #f1f5f9; }
-    tr:last-child td { border-bottom: none; }
+
+    td {
+      padding: 9px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:hover td {
+      background: #f1f5f9;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
 
     /* ── Callouts ── */
     .callout {
@@ -247,11 +372,32 @@
       font-size: 14px;
       line-height: 1.6;
     }
-    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-    .callout.info    { background: #eff6ff; border-left: 4px solid var(--blue-light); }
-    .callout.tip     { background: #f0fdf4; border-left: 4px solid var(--green); }
-    .callout.warning { background: #fffbeb; border-left: 4px solid var(--yellow); }
-    .callout strong  { display: block; margin-bottom: 4px; }
+
+    .callout-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .callout.info {
+      background: #eff6ff;
+      border-left: 4px solid var(--blue-light);
+    }
+
+    .callout.tip {
+      background: #f0fdf4;
+      border-left: 4px solid var(--green);
+    }
+
+    .callout.warning {
+      background: #fffbeb;
+      border-left: 4px solid var(--yellow);
+    }
+
+    .callout strong {
+      display: block;
+      margin-bottom: 4px;
+    }
 
     /* ── Diagrama ASCII ── */
     .diagram {
@@ -283,10 +429,18 @@
       font-weight: 600;
       margin: 3px 4px;
     }
-    .file-pill::before { content: "📄"; font-size: 12px; }
+
+    .file-pill::before {
+      content: "📄";
+      font-size: 12px;
+    }
 
     /* ── Step badges ── */
-    .step-list { list-style: none; padding: 0; }
+    .step-list {
+      list-style: none;
+      padding: 0;
+    }
+
     .step-list li {
       display: flex;
       gap: 14px;
@@ -294,134 +448,217 @@
       padding: 10px 0;
       border-bottom: 1px solid var(--border);
     }
-    .step-list li:last-child { border-bottom: none; }
+
+    .step-list li:last-child {
+      border-bottom: none;
+    }
+
     .step-badge {
-      min-width: 28px; height: 28px;
+      min-width: 28px;
+      height: 28px;
       background: var(--blue-light);
       color: #fff;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
     }
 
     /* ── Responsivo ── */
     @media (max-width: 860px) {
-      .sidebar { display: none; }
-      .main { margin-left: 0; padding: 24px 20px 60px; }
-      .hero { padding: 32px 24px; }
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 24px 20px 60px;
+      }
+
+      .hero {
+        padding: 32px 24px;
+      }
     }
 
     /* ── Print ── */
     @media print {
-      .sidebar { display: none; }
-      .main { margin-left: 0; max-width: 100%; padding: 0; }
-      .section { page-break-inside: avoid; }
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .section {
+        page-break-inside: avoid;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
-<div class="layout">
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="icon">V</div>
-    <span>voll</span>
-  </div>
-  <nav>
-    <div class="section-title">Introdução</div>
-    <a href="#s1">1. O que é este projeto?</a>
-    <a href="#s2">2. Tecnologias</a>
-    <a href="#s3">3. Estrutura de pastas</a>
-    <a href="#s4">4. Inicialização</a>
+  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="icon">V</div>
+        <span>voll</span>
+      </div>
+      <nav>
+        <div class="section-title">Introdução</div>
+        <a href="#s1">1. O que é este projeto?</a>
+        <a href="#s2">2. Tecnologias</a>
+        <a href="#s3">3. Estrutura de pastas</a>
+        <a href="#s4">4. Inicialização</a>
 
-    <div class="section-title">Base</div>
-    <a href="#s5">5. Sistema de cores</a>
-    <a href="#s6">6. Máscaras e validações</a>
+        <div class="section-title">Base</div>
+        <a href="#s5">5. Sistema de cores</a>
+        <a href="#s6">6. Máscaras e validações</a>
 
-    <div class="section-title">Componentes</div>
-    <a href="#s7-1">7.1 ScreenContainer</a>
-    <a href="#s7-2">7.2 Logo</a>
-    <a href="#s7-3">7.3 Input</a>
-    <a href="#s7-4">7.4 Button</a>
-    <a href="#s7-5">7.5 Checkbox</a>
+        <div class="section-title">Componentes</div>
+        <a href="#s7-1">7.1 ScreenContainer</a>
+        <a href="#s7-2">7.2 Logo</a>
+        <a href="#s7-3">7.3 Input</a>
+        <a href="#s7-4">7.4 Button</a>
+        <a href="#s7-5">7.5 Checkbox</a>
 
-    <div class="section-title">Navegação & Telas</div>
-    <a href="#s8">8. AppNavigator</a>
-    <a href="#s9-1">9.1 LoginScreen</a>
-    <a href="#s9-2">9.2 Cadastro Passo 1</a>
-    <a href="#s9-3">9.3 Cadastro Passo 2</a>
-    <a href="#s9-4">9.4 Cadastro Passo 3</a>
+        <div class="section-title">Navegação & Telas</div>
+        <a href="#s8">8. AppNavigator</a>
+        <a href="#s9-1">9.1 LoginScreen</a>
+        <a href="#s9-2">9.2 Cadastro Passo 1</a>
+        <a href="#s9-3">9.3 Cadastro Passo 2</a>
+        <a href="#s9-4">9.4 Cadastro Passo 3</a>
 
-    <div class="section-title">Conceitos & Arquitetura</div>
-    <a href="#s10">10. Fluxo de dados</a>
-    <a href="#s11">11. Conceitos fundamentais</a>
-    <a href="#s12">12. Arquitetura geral</a>
-  </nav>
-</aside>
+        <div class="section-title">Conceitos & Arquitetura</div>
+        <a href="#s10">10. Fluxo de dados</a>
+        <a href="#s11">11. Conceitos fundamentais</a>
+        <a href="#s12">12. Arquitetura geral</a>
+      </nav>
+    </aside>
 
-<!-- ═══════════════════ MAIN ═══════════════════ -->
-<main class="main">
+    <!-- ═══════════════════ MAIN ═══════════════════ -->
+    <main class="main">
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-badge">Apostila Completa</div>
-    <h1>App Voll em React Native com Expo</h1>
-    <p>Guia passo a passo do desenvolvimento completo: componentes, navegação, validação de formulários, máscaras de input e fluxo de dados entre telas.</p>
-    <div class="hero-tags">
-      <span class="tag">React Native 0.73</span>
-      <span class="tag">Expo 50</span>
-      <span class="tag">React Navigation 6</span>
-      <span class="tag">react-native-mask-input</span>
-      <span class="tag">react-native-svg</span>
-    </div>
-  </div>
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-badge">Apostila Inicial</div>
+        <h1>App Voll em React Native com Expo</h1>
+        <p>Guia passo a passo do desenvolvimento completo: componentes, navegação, validação de formulários, máscaras de
+          input e fluxo de dados entre telas.</p>
+        <div class="hero-tags">
+          <span class="tag">React Native 0.73</span>
+          <span class="tag">Expo 50</span>
+          <span class="tag">React Navigation 6</span>
+          <span class="tag">react-native-mask-input</span>
+          <span class="tag">react-native-svg</span>
+        </div>
+      </div>
 
-  <!-- ─── SEÇÃO 1 ─── -->
-  <section class="section" id="s1">
-    <div class="section-header">
-      <div class="section-num">1</div>
-      <h2>O que é este projeto?</h2>
-    </div>
-    <p>O <strong>App Voll</strong> é um aplicativo mobile criado com <strong>React Native + Expo</strong>. Ele simula o fluxo de <strong>login</strong> e <strong>cadastro</strong> de um aplicativo de saúde, onde o usuário:</p>
-    <ol class="step-list">
-      <li><span class="step-badge">1</span><span>Faz login com e-mail e senha.</span></li>
-      <li><span class="step-badge">2</span><span>Caso não tenha conta, realiza um cadastro dividido em <strong>3 passos</strong>.</span></li>
-      <li><span class="step-badge">3</span><span><strong>Passo 1 —</strong> dados pessoais: nome, e-mail, senha.</span></li>
-      <li><span class="step-badge">4</span><span><strong>Passo 2 —</strong> endereço: CEP, logradouro, número, complemento, telefone.</span></li>
-      <li><span class="step-badge">5</span><span><strong>Passo 3 —</strong> plano de saúde: seleção por checkboxes.</span></li>
-    </ol>
-    <div class="callout tip">
-      <span class="callout-icon">💡</span>
-      <div><strong>Por que dividir o cadastro em etapas?</strong> Formulários longos em uma única tela aumentam a taxa de abandono. Dividir em passos melhora a experiência do usuário (UX) e permite validar cada grupo de campos antes de avançar.</div>
-    </div>
-  </section>
+      <!-- ─── SEÇÃO 1 ─── -->
+      <section class="section" id="s1">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <h2>O que é este projeto?</h2>
+        </div>
+        <p>O <strong>App Voll</strong> é um aplicativo mobile criado com <strong>React Native + Expo</strong>. Ele
+          simula o fluxo de <strong>login</strong> e <strong>cadastro</strong> de um aplicativo de saúde, onde o
+          usuário:</p>
+        <ol class="step-list">
+          <li><span class="step-badge">1</span><span>Faz login com e-mail e senha.</span></li>
+          <li><span class="step-badge">2</span><span>Caso não tenha conta, realiza um cadastro dividido em <strong>3
+                passos</strong>.</span></li>
+          <li><span class="step-badge">3</span><span><strong>Passo 1 —</strong> dados pessoais: nome, e-mail,
+              senha.</span></li>
+          <li><span class="step-badge">4</span><span><strong>Passo 2 —</strong> endereço: CEP, logradouro, número,
+              complemento, telefone.</span></li>
+          <li><span class="step-badge">5</span><span><strong>Passo 3 —</strong> plano de saúde: seleção por
+              checkboxes.</span></li>
+        </ol>
+        <div class="callout tip">
+          <span class="callout-icon">💡</span>
+          <div><strong>Por que dividir o cadastro em etapas?</strong> Formulários longos em uma única tela aumentam a
+            taxa de abandono. Dividir em passos melhora a experiência do usuário (UX) e permite validar cada grupo de
+            campos antes de avançar.</div>
+        </div>
+      </section>
 
-  <!-- ─── SEÇÃO 2 ─── -->
-  <section class="section" id="s2">
-    <div class="section-header">
-      <div class="section-num">2</div>
-      <h2>Tecnologias e bibliotecas utilizadas</h2>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Biblioteca</th><th>Versão</th><th>Para que serve</th></tr></thead>
-        <tbody>
-          <tr><td><code>expo</code></td><td>~50.0.17</td><td>Plataforma que facilita o desenvolvimento React Native</td></tr>
-          <tr><td><code>react</code></td><td>18.2.0</td><td>Biblioteca principal para criar componentes</td></tr>
-          <tr><td><code>react-native</code></td><td>0.73.6</td><td>Framework para criar apps móveis com JavaScript</td></tr>
-          <tr><td><code>@react-navigation/native</code></td><td>^6.1.17</td><td>Sistema de navegação entre telas</td></tr>
-          <tr><td><code>@react-navigation/native-stack</code></td><td>^6.9.26</td><td>Navegação em pilha (stack) com animações nativas</td></tr>
-          <tr><td><code>react-native-safe-area-context</code></td><td>4.8.2</td><td>Respeita notch, barra de status e áreas seguras</td></tr>
-          <tr><td><code>react-native-screens</code></td><td>~3.29.0</td><td>Otimiza renderização usando telas nativas do SO</td></tr>
-          <tr><td><code>react-native-mask-input</code></td><td>^1.2.3</td><td>Formata inputs com máscaras (CEP, telefone)</td></tr>
-          <tr><td><code>react-native-svg</code></td><td>14.1.0</td><td>Permite desenhar vetores SVG (logo)</td></tr>
-          <tr><td><code>expo-status-bar</code></td><td>~1.11.1</td><td>Controla a barra de status do celular</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <h3>Como instalar e rodar</h3>
-    <pre><code><span class="cm"># Instala todas as dependências do package.json</span>
+      <!-- ─── SEÇÃO 2 ─── -->
+      <section class="section" id="s2">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <h2>Tecnologias e bibliotecas utilizadas</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Biblioteca</th>
+                <th>Versão</th>
+                <th>Para que serve</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>expo</code></td>
+                <td>~50.0.17</td>
+                <td>Plataforma que facilita o desenvolvimento React Native</td>
+              </tr>
+              <tr>
+                <td><code>react</code></td>
+                <td>18.2.0</td>
+                <td>Biblioteca principal para criar componentes</td>
+              </tr>
+              <tr>
+                <td><code>react-native</code></td>
+                <td>0.73.6</td>
+                <td>Framework para criar apps móveis com JavaScript</td>
+              </tr>
+              <tr>
+                <td><code>@react-navigation/native</code></td>
+                <td>^6.1.17</td>
+                <td>Sistema de navegação entre telas</td>
+              </tr>
+              <tr>
+                <td><code>@react-navigation/native-stack</code></td>
+                <td>^6.9.26</td>
+                <td>Navegação em pilha (stack) com animações nativas</td>
+              </tr>
+              <tr>
+                <td><code>react-native-safe-area-context</code></td>
+                <td>4.8.2</td>
+                <td>Respeita notch, barra de status e áreas seguras</td>
+              </tr>
+              <tr>
+                <td><code>react-native-screens</code></td>
+                <td>~3.29.0</td>
+                <td>Otimiza renderização usando telas nativas do SO</td>
+              </tr>
+              <tr>
+                <td><code>react-native-mask-input</code></td>
+                <td>^1.2.3</td>
+                <td>Formata inputs com máscaras (CEP, telefone)</td>
+              </tr>
+              <tr>
+                <td><code>react-native-svg</code></td>
+                <td>14.1.0</td>
+                <td>Permite desenhar vetores SVG (logo)</td>
+              </tr>
+              <tr>
+                <td><code>expo-status-bar</code></td>
+                <td>~1.11.1</td>
+                <td>Controla a barra de status do celular</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Como instalar e rodar</h3>
+        <pre><code><span class="cm"># Instala todas as dependências do package.json</span>
 npm install
 
 <span class="cm"># Inicia o servidor de desenvolvimento</span>
@@ -430,64 +667,67 @@ npx expo start
 <span class="cm"># Para rodar diretamente em um dispositivo/emulador</span>
 npx expo start --android
 npx expo start --ios</code></pre>
-  </section>
+      </section>
 
-  <!-- ─── SEÇÃO 3 ─── -->
-  <section class="section" id="s3">
-    <div class="section-header">
-      <div class="section-num">3</div>
-      <h2>Estrutura de pastas</h2>
-    </div>
-    <div class="diagram">app_voll/
-├── index.js                    ← Ponto de entrada do Expo
-├── App.jsx                     ← Componente raiz da aplicação
-├── package.json                ← Lista de dependências e scripts
-├── babel.config.js             ← Configuração do compilador
-├── app.json                    ← Configurações do Expo (nome, ícone, etc.)
-│
-└── src/                        ← Todo o código-fonte fica aqui
-    ├── components/             ← Peças de UI reutilizáveis em qualquer tela
-    │   ├── ButtonForm.jsx          ← Botão primário e secundário
-    │   ├── Checkbox.jsx        ← Caixa de seleção com rótulo
-    │   ├── LabeledInput.jsx           ← Campo de texto com suporte a máscara
-    │   ├── Logo.jsx            ← Logo SVG do app
-    │   └── ScreenContainer.jsx ← Wrapper padrão de cada tela
-    │
-    ├── navigation/
-    │   └── AppNavigator.jsx    ← Define as rotas e como navegar entre elas
-    │
-    ├── screens/                ← Cada arquivo é uma tela completa
-    │   ├── LoginScreen.jsx
-    │   ├── CadastroPasso1Screen.jsx
-    │   ├── CadastroPasso2Screen.jsx
-    │   └── CadastroPasso3Screen.jsx
-    │
-    ├── theme/
-    │   └── colors.js           ← Paleta de cores centralizada
-    │
-    └── utils/
-        └── masks.js            ← Máscaras e funções de validação</div>
-    <div class="callout info">
-      <span class="callout-icon">ℹ️</span>
-      <div><strong>Por que essa estrutura?</strong> Separar em <code>components</code>, <code>screens</code>, <code>navigation</code>, <code>theme</code> e <code>utils</code> é uma convenção amplamente usada em React Native. Facilita encontrar arquivos, reutilizar código e escalar o projeto.</div>
-    </div>
-  </section>
+      <!-- ─── SEÇÃO 3 ─── -->
+      <section class="section" id="s3">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <h2>Estrutura de pastas</h2>
+        </div>
+        <div class="diagram">app_voll/
+          ├── index.js ← Ponto de entrada do Expo
+          ├── App.jsx ← Componente raiz da aplicação
+          ├── package.json ← Lista de dependências e scripts
+          ├── babel.config.js ← Configuração do compilador
+          ├── app.json ← Configurações do Expo (nome, ícone, etc.)
+          │
+          └── src/ ← Todo o código-fonte fica aqui
+          ├── components/ ← Peças de UI reutilizáveis em qualquer tela
+          │ ├── ButtonForm.jsx ← Botão primário e secundário
+          │ ├── Checkbox.jsx ← Caixa de seleção com rótulo
+          │ ├── LabeledInput.jsx ← Campo de texto com suporte a máscara
+          │ ├── Logo.jsx ← Logo SVG do app
+          │ └── ScreenContainer.jsx ← Wrapper padrão de cada tela
+          │
+          ├── navigation/
+          │ └── AppNavigator.jsx ← Define as rotas e como navegar entre elas
+          │
+          ├── screens/ ← Cada arquivo é uma tela completa
+          │ ├── LoginScreen.jsx
+          │ ├── CadastroPasso1Screen.jsx
+          │ ├── CadastroPasso2Screen.jsx
+          │ └── CadastroPasso3Screen.jsx
+          │
+          ├── theme/
+          │ └── colors.js ← Paleta de cores centralizada
+          │
+          └── utils/
+          └── masks.js ← Máscaras e funções de validação</div>
+        <div class="callout info">
+          <span class="callout-icon">ℹ️</span>
+          <div><strong>Por que essa estrutura?</strong> Separar em <code>components</code>, <code>screens</code>,
+            <code>navigation</code>, <code>theme</code> e <code>utils</code> é uma convenção amplamente usada em React
+            Native. Facilita encontrar arquivos, reutilizar código e escalar o projeto.
+          </div>
+        </div>
+      </section>
 
-  <!-- ─── SEÇÃO 4 ─── -->
-  <section class="section" id="s4">
-    <div class="section-header">
-      <div class="section-num">4</div>
-      <h2>Como o projeto inicia — index.js e App.jsx</h2>
-    </div>
+      <!-- ─── SEÇÃO 4 ─── -->
+      <section class="section" id="s4">
+        <div class="section-header">
+          <div class="section-num">4</div>
+          <h2>Como o projeto inicia — index.js e App.jsx</h2>
+        </div>
 
-    <h3>index.js</h3>
-    <pre><code><span class="kw">import</span> { registerRootComponent } <span class="kw">from</span> <span class="str">'expo'</span>; <span class="cm">// Importa a função que registra o componente raiz no Expo.</span>
+        <h3>index.js</h3>
+        <pre><code><span class="kw">import</span> { registerRootComponent } <span class="kw">from</span> <span class="str">'expo'</span>; <span class="cm">// Importa a função que registra o componente raiz no Expo.</span>
 <span class="kw">import</span> App <span class="kw">from</span> <span class="str">'./App'</span>;                       <span class="cm">// Importa o componente principal do app.</span>
 
 <span class="fn">registerRootComponent</span>(App); <span class="cm">// Diz ao Expo: "este é o componente inicial, renderize ele primeiro".</span></code></pre>
 
-    <h3>App.jsx</h3>
-    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;                               <span class="cm">// Importa o React — necessário em todo arquivo JSX.</span>
+        <h3>App.jsx</h3>
+        <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;                               <span class="cm">// Importa o React — necessário em todo arquivo JSX.</span>
 <span class="kw">import</span> { StatusBar } <span class="kw">from</span> <span class="str">'expo-status-bar'</span>;             <span class="cm">// Controla a barra de status do celular.</span>
 <span class="kw">import</span> { SafeAreaProvider } <span class="kw">from</span> <span class="str">'react-native-safe-area-context'</span>; <span class="cm">// Provê contexto de área segura para toda a árvore.</span>
 <span class="kw">import</span> AppNavigator <span class="kw">from</span> <span class="str">'./src/navigation/AppNavigator'</span>; <span class="cm">// Importa o navegador que define as telas do app.</span>
@@ -501,19 +741,22 @@ npx expo start --ios</code></pre>
     <span class="tag-name">&lt;/SafeAreaProvider&gt;</span>
   );
 }</code></pre>
-    <div class="callout tip">
-      <span class="callout-icon">💡</span>
-      <div><strong>SafeAreaProvider</strong> — Em celulares modernos existem "áreas perigosas" onde a interface do sistema fica (notch, câmera de buraco, barra de gestos). O <code>SafeAreaProvider</code> calcula essas áreas e disponibiliza a informação para todos os componentes filhos via contexto React. Sem ele, o conteúdo pode ficar escondido atrás do notch.</div>
-    </div>
-  </section>
+        <div class="callout tip">
+          <span class="callout-icon">💡</span>
+          <div><strong>SafeAreaProvider</strong> — Em celulares modernos existem "áreas perigosas" onde a interface do
+            sistema fica (notch, câmera de buraco, barra de gestos). O <code>SafeAreaProvider</code> calcula essas áreas
+            e disponibiliza a informação para todos os componentes filhos via contexto React. Sem ele, o conteúdo pode
+            ficar escondido atrás do notch.</div>
+        </div>
+      </section>
 
-  <!-- ─── SEÇÃO 5 ─── -->
-  <section class="section" id="s5">
-    <div class="section-header">
-      <div class="section-num">5</div>
-      <h2>Sistema de cores — theme/colors.js</h2>
-    </div>
-    <pre><code><span class="cm">// Paleta de cores do app Voll</span>
+      <!-- ─── SEÇÃO 5 ─── -->
+      <section class="section" id="s5">
+        <div class="section-header">
+          <div class="section-num">5</div>
+          <h2>Sistema de cores — theme/colors.js</h2>
+        </div>
+        <pre><code><span class="cm">// Paleta de cores do app Voll</span>
 <span class="kw">const</span> colors = {
   <span class="prop">primary</span>:         <span class="str">'#0B3B60'</span>,   <span class="cm">// Azul escuro — botões principais, bordas de inputs, labels.</span>
   <span class="prop">primaryDark</span>:     <span class="str">'#082846'</span>,   <span class="cm">// Azul ainda mais escuro — reservado para variações futuras.</span>
@@ -530,19 +773,21 @@ npx expo start --ios</code></pre>
 };
 
 <span class="kw">export default</span> colors; <span class="cm">// Exporta o objeto para que outros arquivos possam importar.</span></code></pre>
-    <div class="callout warning">
-      <span class="callout-icon">⚡</span>
-      <div><strong>Princípio DRY</strong> — Imagine que a cor primária mude de azul para verde. Sem centralização, você editaria dezenas de arquivos. Com um arquivo de tema, muda apenas uma linha e todo o app atualiza.</div>
-    </div>
-  </section>
+        <div class="callout warning">
+          <span class="callout-icon">⚡</span>
+          <div><strong>Princípio DRY</strong> — Imagine que a cor primária mude de azul para verde. Sem centralização,
+            você editaria dezenas de arquivos. Com um arquivo de tema, muda apenas uma linha e todo o app atualiza.
+          </div>
+        </div>
+      </section>
 
-  <!-- ─── SEÇÃO 6 ─── -->
-  <section class="section" id="s6">
-    <div class="section-header">
-      <div class="section-num">6</div>
-      <h2>Utilitários de máscara e validação — utils/masks.js</h2>
-    </div>
-    <pre><code><span class="cm">// Máscara de CEP: formata "12345678" como "12345-678"</span>
+      <!-- ─── SEÇÃO 6 ─── -->
+      <section class="section" id="s6">
+        <div class="section-header">
+          <div class="section-num">6</div>
+          <h2>Utilitários de máscara e validação — utils/masks.js</h2>
+        </div>
+        <pre><code><span class="cm">// Máscara de CEP: formata "12345678" como "12345-678"</span>
 <span class="kw">export const</span> CEP_MASK = [
   <span class="rx">/\d/</span>, <span class="cm">// 1° dígito: aceita qualquer número (\d = 0-9)</span>
   <span class="rx">/\d/</span>, <span class="cm">// 2° dígito</span>
@@ -592,30 +837,48 @@ npx expo start --ios</code></pre>
   <span class="kw">const</span> d = <span class="fn">onlyDigits</span>(phone).length;
   <span class="kw">return</span> d === <span class="num">10</span> || d === <span class="num">11</span>;
 };</code></pre>
-    <div class="callout info">
-      <span class="callout-icon">ℹ️</span>
-      <div><strong>Como a máscara funciona?</strong> Cada elemento do array é aplicado posição a posição ao texto digitado. Se o elemento é um <code>RegExp</code> (ex: <code>/\d/</code>), o caractere digitado precisa satisfazê-lo. Se é uma string (ex: <code>'-'</code>), é inserida automaticamente sem que o usuário precise digitar.</div>
-    </div>
-  </section>
+        <div class="callout info">
+          <span class="callout-icon">ℹ️</span>
+          <div><strong>Como a máscara funciona?</strong> Cada elemento do array é aplicado posição a posição ao texto
+            digitado. Se o elemento é um <code>RegExp</code> (ex: <code>/\d/</code>), o caractere digitado precisa
+            satisfazê-lo. Se é uma string (ex: <code>'-'</code>), é inserida automaticamente sem que o usuário precise
+            digitar.</div>
+        </div>
+      </section>
 
-  <!-- ─── SEÇÃO 7.1 ─── -->
-  <section class="section" id="s7-1">
-    <div class="section-header">
-      <div class="section-num">7.1</div>
-      <h2>Componente — ScreenContainer.jsx</h2>
-    </div>
-    <p>Este é o <strong>invólucro (wrapper) padrão</strong> de todas as telas. Ele resolve três problemas comuns:</p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Problema</th><th>Solução</th></tr></thead>
-        <tbody>
-          <tr><td>Conteúdo escondido atrás do notch/barra de status</td><td><code>SafeAreaView</code></td></tr>
-          <tr><td>Teclado sobrepõe os campos quando abre</td><td><code>KeyboardAvoidingView</code></td></tr>
-          <tr><td>Conteúdo maior que a tela não rola</td><td><code>ScrollView</code></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+      <!-- ─── SEÇÃO 7.1 ─── -->
+      <section class="section" id="s7-1">
+        <div class="section-header">
+          <div class="section-num">7.1</div>
+          <h2>Componente — ScreenContainer.jsx</h2>
+        </div>
+        <p>Este é o <strong>invólucro (wrapper) padrão</strong> de todas as telas. Ele resolve três problemas comuns:
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Problema</th>
+                <th>Solução</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Conteúdo escondido atrás do notch/barra de status</td>
+                <td><code>SafeAreaView</code></td>
+              </tr>
+              <tr>
+                <td>Teclado sobrepõe os campos quando abre</td>
+                <td><code>KeyboardAvoidingView</code></td>
+              </tr>
+              <tr>
+                <td>Conteúdo maior que a tela não rola</td>
+                <td><code>ScrollView</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { View, ScrollView, KeyboardAvoidingView, Platform, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>;
 <span class="kw">import</span> { SafeAreaView } <span class="kw">from</span> <span class="str">'react-native-safe-area-context'</span>;
 <span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
@@ -654,15 +917,15 @@ npx expo start --ios</code></pre>
   <span class="prop">scroll</span>: { flexGrow: <span class="num">1</span>, paddingHorizontal: <span class="num">24</span>, paddingTop: <span class="num">16</span>, paddingBottom: <span class="num">32</span> },
   <span class="prop">inner</span>: { flex: <span class="num">1</span> },
 });</code></pre>
-  </section>
+      </section>
 
-  <!-- ─── SEÇÃO 7.2 ─── -->
-  <section class="section" id="s7-2">
-    <div class="section-header">
-      <div class="section-num">7.2</div>
-      <h2>Componente — Logo.jsx</h2>
-    </div>
-    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+      <!-- ─── SEÇÃO 7.2 ─── -->
+      <section class="section" id="s7-2">
+        <div class="section-header">
+          <div class="section-num">7.2</div>
+          <h2>Componente — Logo.jsx</h2>
+        </div>
+        <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { View, Text, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>;
 <span class="kw">import</span> Svg, { Path } <span class="kw">from</span> <span class="str">'react-native-svg'</span>; <span class="cm">// Primitivos de SVG</span>
 <span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
@@ -699,16 +962,17 @@ npx expo start --ios</code></pre>
   <span class="prop">wrapper</span>: { flexDirection: <span class="str">'row'</span>, alignItems: <span class="str">'center'</span>, justifyContent: <span class="str">'center'</span>, gap: <span class="num">6</span> },
   <span class="prop">text</span>: { color: colors.accent, fontWeight: <span class="str">'600'</span>, letterSpacing: <span class="num">0.5</span> },
 });</code></pre>
-  </section>
+      </section>
 
-  <!-- ─── SEÇÃO 7.3 ─── -->
-  <section class="section" id="s7-3">
-    <div class="section-header">
-      <div class="section-num">7.3</div>
-      <h2>Componente — Input.jsx</h2>
-    </div>
-    <p>O <code>Input</code> é o componente mais complexo do projeto. Ele suporta dois modos: <strong>campo normal</strong> e <strong>campo com máscara</strong>.</p>
-    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+      <!-- ─── SEÇÃO 7.3 ─── -->
+      <section class="section" id="s7-3">
+        <div class="section-header">
+          <div class="section-num">7.3</div>
+          <h2>Componente — Input.jsx</h2>
+        </div>
+        <p>O <code>Input</code> é o componente mais complexo do projeto. Ele suporta dois modos: <strong>campo
+            normal</strong> e <strong>campo com máscara</strong>.</p>
+        <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { View, Text, TextInput, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>;
 <span class="kw">import</span> MaskInput <span class="kw">from</span> <span class="str">'react-native-mask-input'</span>;
 <span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
@@ -774,19 +1038,21 @@ npx expo start --ios</code></pre>
   <span class="prop">inputError</span>: { borderColor: colors.error },            <span class="cm">// Troca borda para vermelho</span>
   <span class="prop">errorText</span>:  { color: colors.error, fontSize: <span class="num">12</span>, marginTop: <span class="num">4</span> },
 });</code></pre>
-    <div class="callout tip">
-      <span class="callout-icon">💡</span>
-      <div><strong>Componente Controlado</strong> — O <code>Input</code> não guarda o texto em si. O valor vem sempre do estado do pai via <code>value</code>, e cada digitação chama <code>onChangeText</code> para que o pai atualize seu estado. Isso dá controle total ao componente pai sobre os dados do formulário.</div>
-    </div>
-  </section>
+        <div class="callout tip">
+          <span class="callout-icon">💡</span>
+          <div><strong>Componente Controlado</strong> — O <code>Input</code> não guarda o texto em si. O valor vem
+            sempre do estado do pai via <code>value</code>, e cada digitação chama <code>onChangeText</code> para que o
+            pai atualize seu estado. Isso dá controle total ao componente pai sobre os dados do formulário.</div>
+        </div>
+      </section>
 
-  <!-- ─── SEÇÃO 7.4 ─── -->
-  <section class="section" id="s7-4">
-    <div class="section-header">
-      <div class="section-num">7.4</div>
-      <h2>Componente — Button.jsx</h2>
-    </div>
-    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+      <!-- ─── SEÇÃO 7.4 ─── -->
+      <section class="section" id="s7-4">
+        <div class="section-header">
+          <div class="section-num">7.4</div>
+          <h2>Componente — Button.jsx</h2>
+        </div>
+        <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { TouchableOpacity, Text, StyleSheet, ActivityIndicator } <span class="kw">from</span> <span class="str">'react-native'</span>;
 <span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
 
@@ -827,15 +1093,15 @@ npx expo start --ios</code></pre>
   <span class="prop">disabled</span>:  { opacity: <span class="num">0.7</span> },                       <span class="cm">// Botão inativo = semi-transparente</span>
   <span class="prop">text</span>:      { color: colors.white, fontSize: <span class="num">16</span>, fontWeight: <span class="str">'700'</span> },
 });</code></pre>
-  </section>
+      </section>
 
-  <!-- ─── SEÇÃO 7.5 ─── -->
-  <section class="section" id="s7-5">
-    <div class="section-header">
-      <div class="section-num">7.5</div>
-      <h2>Componente — Checkbox.jsx</h2>
-    </div>
-    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+      <!-- ─── SEÇÃO 7.5 ─── -->
+      <section class="section" id="s7-5">
+        <div class="section-header">
+          <div class="section-num">7.5</div>
+          <h2>Componente — Checkbox.jsx</h2>
+        </div>
+        <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { TouchableOpacity, Text, View, StyleSheet } <span class="kw">from</span> <span class="str">'react-native'</span>;
 <span class="kw">import</span> colors <span class="kw">from</span> <span class="str">'../theme/colors'</span>;
 
@@ -875,15 +1141,15 @@ npx expo start --ios</code></pre>
   <span class="prop">label</span>:      { fontSize: <span class="num">16</span>, color: colors.textPrimary },
   <span class="prop">labelDark</span>:  { color: colors.white },
 });</code></pre>
-  </section>
+      </section>
 
-  <!-- ─── SEÇÃO 8 ─── -->
-  <section class="section" id="s8">
-    <div class="section-header">
-      <div class="section-num">8</div>
-      <h2>Navegação — AppNavigator.jsx</h2>
-    </div>
-    <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+      <!-- ─── SEÇÃO 8 ─── -->
+      <section class="section" id="s8">
+        <div class="section-header">
+          <div class="section-num">8</div>
+          <h2>Navegação — AppNavigator.jsx</h2>
+        </div>
+        <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { NavigationContainer } <span class="kw">from</span> <span class="str">'@react-navigation/native'</span>;
 <span class="cm">// NavigationContainer: contexto global de navegação. Mantém o histórico de telas (a "pilha").</span>
 <span class="kw">import</span> { createNativeStackNavigator } <span class="kw">from</span> <span class="str">'@react-navigation/native-stack'</span>;
@@ -914,33 +1180,47 @@ npx expo start --ios</code></pre>
     <span class="tag-name">&lt;/NavigationContainer&gt;</span>
   );
 }</code></pre>
-    <h3>Como funciona a pilha de navegação?</h3>
-    <div class="diagram">Estado inicial:      Após navegar:         Após popToTop():
-┌─────────────┐      ┌─────────────┐       ┌─────────────┐
-│   Login     │  →   │  Passo 3    │  →    │   Login     │
-└─────────────┘      │  Passo 2    │       └─────────────┘
-                     │  Passo 1    │
-                     │   Login     │
-                     └─────────────┘</div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Método</th><th>O que faz</th></tr></thead>
-        <tbody>
-          <tr><td><code>navigation.navigate('Nome', {params})</code></td><td>Vai para uma tela, passando dados opcionais</td></tr>
-          <tr><td><code>navigation.goBack()</code></td><td>Volta para a tela anterior (remove o topo da pilha)</td></tr>
-          <tr><td><code>navigation.popToTop()</code></td><td>Volta para a primeira tela (esvazia toda a pilha)</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+        <h3>Como funciona a pilha de navegação?</h3>
+        <div class="diagram">Estado inicial: Após navegar: Após popToTop():
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+          │ Login │ → │ Passo 3 │ → │ Login │
+          └─────────────┘ │ Passo 2 │ └─────────────┘
+          │ Passo 1 │
+          │ Login │
+          └─────────────┘</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Método</th>
+                <th>O que faz</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>navigation.navigate('Nome', {params})</code></td>
+                <td>Vai para uma tela, passando dados opcionais</td>
+              </tr>
+              <tr>
+                <td><code>navigation.goBack()</code></td>
+                <td>Volta para a tela anterior (remove o topo da pilha)</td>
+              </tr>
+              <tr>
+                <td><code>navigation.popToTop()</code></td>
+                <td>Volta para a primeira tela (esvazia toda a pilha)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-  <!-- ─── SEÇÃO 9.1 ─── -->
-  <section class="section" id="s9-1">
-    <div class="section-header">
-      <div class="section-num">9.1</div>
-      <h2>Tela — LoginScreen.jsx</h2>
-    </div>
-    <pre><code><span class="kw">import</span> React, { useState } <span class="kw">from</span> <span class="str">'react'</span>;
+      <!-- ─── SEÇÃO 9.1 ─── -->
+      <section class="section" id="s9-1">
+        <div class="section-header">
+          <div class="section-num">9.1</div>
+          <h2>Tela — LoginScreen.jsx</h2>
+        </div>
+        <pre><code><span class="kw">import</span> React, { useState } <span class="kw">from</span> <span class="str">'react'</span>;
 <span class="kw">import</span> { View, Text, StyleSheet, TouchableOpacity, Alert } <span class="kw">from</span> <span class="str">'react-native'</span>;
 <span class="kw">import</span> ScreenContainer <span class="kw">from</span> <span class="str">'../components/ScreenContainer'</span>;
 <span class="kw">import</span> Logo <span class="kw">from</span> <span class="str">'../components/Logo'</span>;
@@ -1024,15 +1304,15 @@ npx expo start --ios</code></pre>
     <span class="tag-name">&lt;/ScreenContainer&gt;</span>
   );
 }</code></pre>
-  </section>
+      </section>
 
-  <!-- ─── SEÇÃO 9.2 ─── -->
-  <section class="section" id="s9-2">
-    <div class="section-header">
-      <div class="section-num">9.2</div>
-      <h2>Tela — CadastroPasso1Screen.jsx</h2>
-    </div>
-    <pre><code><span class="kw">export default function</span> <span class="fn">CadastroPasso1Screen</span>({ navigation, route }) {
+      <!-- ─── SEÇÃO 9.2 ─── -->
+      <section class="section" id="s9-2">
+        <div class="section-header">
+          <div class="section-num">9.2</div>
+          <h2>Tela — CadastroPasso1Screen.jsx</h2>
+        </div>
+        <pre><code><span class="kw">export default function</span> <span class="fn">CadastroPasso1Screen</span>({ navigation, route }) {
 
   <span class="cm">// Recupera dados anteriores se o usuário voltou desta tela</span>
   <span class="cm">// route?.params?.dados → acesso seguro com optional chaining</span>
@@ -1081,15 +1361,15 @@ npx expo start --ios</code></pre>
 
   <span class="cm">// ... JSX com 4 Inputs e 1 Button "Avançar"</span>
 }</code></pre>
-  </section>
+      </section>
 
-  <!-- ─── SEÇÃO 9.3 ─── -->
-  <section class="section" id="s9-3">
-    <div class="section-header">
-      <div class="section-num">9.3</div>
-      <h2>Tela — CadastroPasso2Screen.jsx</h2>
-    </div>
-    <pre><code><span class="kw">import</span> { CEP_MASK, PHONE_MASK, isValidCEP, isValidPhone } <span class="kw">from</span> <span class="str">'../utils/masks'</span>;
+      <!-- ─── SEÇÃO 9.3 ─── -->
+      <section class="section" id="s9-3">
+        <div class="section-header">
+          <div class="section-num">9.3</div>
+          <h2>Tela — CadastroPasso2Screen.jsx</h2>
+        </div>
+        <pre><code><span class="kw">import</span> { CEP_MASK, PHONE_MASK, isValidCEP, isValidPhone } <span class="kw">from</span> <span class="str">'../utils/masks'</span>;
 
 <span class="kw">export default function</span> <span class="fn">CadastroPasso2Screen</span>({ navigation, route }) {
   <span class="kw">const</span> dadosPasso1 = route?.params?.dados || {};    <span class="cm">// Dados do Passo 1 — repassados ao Passo 3</span>
@@ -1138,15 +1418,15 @@ npx expo start --ios</code></pre>
     <span class="prop">error</span>={errors.cep}
   <span class="tag-name">/&gt;</span>
 }</code></pre>
-  </section>
+      </section>
 
-  <!-- ─── SEÇÃO 9.4 ─── -->
-  <section class="section" id="s9-4">
-    <div class="section-header">
-      <div class="section-num">9.4</div>
-      <h2>Tela — CadastroPasso3Screen.jsx</h2>
-    </div>
-    <pre><code><span class="cm">// Lista fixa fora do componente — não é recriada a cada render</span>
+      <!-- ─── SEÇÃO 9.4 ─── -->
+      <section class="section" id="s9-4">
+        <div class="section-header">
+          <div class="section-num">9.4</div>
+          <h2>Tela — CadastroPasso3Screen.jsx</h2>
+        </div>
+        <pre><code><span class="cm">// Lista fixa fora do componente — não é recriada a cada render</span>
 <span class="kw">const</span> PLANOS = [
   <span class="str">'Sulamerica'</span>, <span class="str">'Unimed'</span>, <span class="str">'Bradesco'</span>, <span class="str">'Amil'</span>,
   <span class="str">'Biosaúde'</span>, <span class="str">'Biovida'</span>, <span class="str">'Outros'</span>, <span class="str">'Não tenho plano'</span>,
@@ -1218,80 +1498,84 @@ npx expo start --ios</code></pre>
     <span class="tag-name">&lt;/ScreenContainer&gt;</span>
   );
 }</code></pre>
-  </section>
+      </section>
 
-  <!-- ─── SEÇÃO 10 ─── -->
-  <section class="section" id="s10">
-    <div class="section-header">
-      <div class="section-num">10</div>
-      <h2>Fluxo de dados entre telas</h2>
-    </div>
-    <div class="diagram">┌──────────────────────────────────────────────────────────────────┐
-│                         LoginScreen                              │
-│  [sem dados — ponto de entrada]                                  │
-│                                                                  │
-│  navigation.navigate('CadastroPasso1')  ──────────────────────┐ │
-└───────────────────────────────────────────────────────────────┼─┘
-                                                                │
-┌───────────────────────────────────────────────────────────────▼─┐
-│                    CadastroPasso1Screen                          │
-│  route.params?.dados → recupera dados se usuário voltou         │
-│                                                                  │
-│  Coleta: nome, email, senha, repetirSenha                        │
-│                                                                  │
-│  navigation.navigate('CadastroPasso2', {                         │
-│    dados: { nome, email, senha, repetirSenha }                   │
-│  })  ──────────────────────────────────────────────────────────┐ │
-└────────────────────────────────────────────────────────────────┼─┘
-                                                                 │
-┌────────────────────────────────────────────────────────────────▼─┐
-│                    CadastroPasso2Screen                           │
-│  route.params.dados   → dados do Passo 1 (guardados)             │
-│  route.params.endereco → recupera endereço se voltou             │
-│                                                                   │
-│  Coleta: cep, endereco, numero, complemento, telefone             │
-│                                                                   │
-│  navigation.navigate('CadastroPasso3', {                          │
-│    dados: dadosPasso1,        ← repassa sem alterar              │
-│    endereco: { cep, ... }     ← dados novos desta tela           │
-│  })  ───────────────────────────────────────────────────────────┐ │
-└─────────────────────────────────────────────────────────────────┼─┘
-                                                                  │
-┌─────────────────────────────────────────────────────────────────▼─┐
-│                    CadastroPasso3Screen                            │
-│  route.params.dados    → nome, email, senha, repetirSenha         │
-│  route.params.endereco → cep, endereco, numero, etc.              │
-│                                                                    │
-│  Coleta: planos (array de strings)                                 │
-│                                                                    │
-│  payload = { ...dados, endereco, planos }  ← combina tudo         │
-│  console.log(payload) → pronto para enviar à API                   │
-│                                                                    │
-│  navigation.popToTop()  →  volta para o Login                      │
-└────────────────────────────────────────────────────────────────────┘</div>
-    <div class="callout info">
-      <span class="callout-icon">ℹ️</span>
-      <div><strong>Por que não usar estado global (Redux, Context)?</strong> Neste projeto, a transferência via <code>route.params</code> é suficiente porque o fluxo é linear e os dados só importam durante o cadastro. Para apps maiores, onde múltiplas telas não relacionadas precisam dos mesmos dados, usaríamos Context API ou Redux.</div>
-    </div>
-  </section>
+      <!-- ─── SEÇÃO 10 ─── -->
+      <section class="section" id="s10">
+        <div class="section-header">
+          <div class="section-num">10</div>
+          <h2>Fluxo de dados entre telas</h2>
+        </div>
+        <div class="diagram">┌──────────────────────────────────────────────────────────────────┐
+          │ LoginScreen │
+          │ [sem dados — ponto de entrada] │
+          │ │
+          │ navigation.navigate('CadastroPasso1') ──────────────────────┐ │
+          └───────────────────────────────────────────────────────────────┼─┘
+          │
+          ┌───────────────────────────────────────────────────────────────▼─┐
+          │ CadastroPasso1Screen │
+          │ route.params?.dados → recupera dados se usuário voltou │
+          │ │
+          │ Coleta: nome, email, senha, repetirSenha │
+          │ │
+          │ navigation.navigate('CadastroPasso2', { │
+          │ dados: { nome, email, senha, repetirSenha } │
+          │ }) ──────────────────────────────────────────────────────────┐ │
+          └────────────────────────────────────────────────────────────────┼─┘
+          │
+          ┌────────────────────────────────────────────────────────────────▼─┐
+          │ CadastroPasso2Screen │
+          │ route.params.dados → dados do Passo 1 (guardados) │
+          │ route.params.endereco → recupera endereço se voltou │
+          │ │
+          │ Coleta: cep, endereco, numero, complemento, telefone │
+          │ │
+          │ navigation.navigate('CadastroPasso3', { │
+          │ dados: dadosPasso1, ← repassa sem alterar │
+          │ endereco: { cep, ... } ← dados novos desta tela │
+          │ }) ───────────────────────────────────────────────────────────┐ │
+          └─────────────────────────────────────────────────────────────────┼─┘
+          │
+          ┌─────────────────────────────────────────────────────────────────▼─┐
+          │ CadastroPasso3Screen │
+          │ route.params.dados → nome, email, senha, repetirSenha │
+          │ route.params.endereco → cep, endereco, numero, etc. │
+          │ │
+          │ Coleta: planos (array de strings) │
+          │ │
+          │ payload = { ...dados, endereco, planos } ← combina tudo │
+          │ console.log(payload) → pronto para enviar à API │
+          │ │
+          │ navigation.popToTop() → volta para o Login │
+          └────────────────────────────────────────────────────────────────────┘</div>
+        <div class="callout info">
+          <span class="callout-icon">ℹ️</span>
+          <div><strong>Por que não usar estado global (Redux, Context)?</strong> Neste projeto, a transferência via
+            <code>route.params</code> é suficiente porque o fluxo é linear e os dados só importam durante o cadastro.
+            Para apps maiores, onde múltiplas telas não relacionadas precisam dos mesmos dados, usaríamos Context API ou
+            Redux.
+          </div>
+        </div>
+      </section>
 
-  <!-- ─── SEÇÃO 11 ─── -->
-  <section class="section" id="s11">
-    <div class="section-header">
-      <div class="section-num">11</div>
-      <h2>Conceitos fundamentais utilizados</h2>
-    </div>
+      <!-- ─── SEÇÃO 11 ─── -->
+      <section class="section" id="s11">
+        <div class="section-header">
+          <div class="section-num">11</div>
+          <h2>Conceitos fundamentais utilizados</h2>
+        </div>
 
-    <h3>useState — Gerenciamento de estado local</h3>
-    <pre><code><span class="kw">const</span> [valor, setValor] = <span class="fn">useState</span>(<span class="str">'inicial'</span>);
+        <h3>useState — Gerenciamento de estado local</h3>
+        <pre><code><span class="kw">const</span> [valor, setValor] = <span class="fn">useState</span>(<span class="str">'inicial'</span>);
 <span class="cm">// valor   → lê o estado atual</span>
 <span class="cm">// setValor → atualiza e causa novo render</span>
 <span class="cm">// 'inicial' → valor no primeiro render</span>
 
 <span class="fn">setValor</span>(<span class="str">'novo'</span>); <span class="cm">// → componente re-renderiza com "novo"</span></code></pre>
 
-    <h3>Renderização condicional</h3>
-    <pre><code><span class="cm">// Forma 1: ternário (se/senão)</span>
+        <h3>Renderização condicional</h3>
+        <pre><code><span class="cm">// Forma 1: ternário (se/senão)</span>
 {error ? <span class="tag-name">&lt;Text&gt;</span>{error}<span class="tag-name">&lt;/Text&gt;</span> : <span class="bool">null</span>}
 
 <span class="cm">// Forma 2: curto-circuito (só renderiza se error for verdadeiro)</span>
@@ -1301,22 +1585,22 @@ npx expo start --ios</code></pre>
 <span class="prop">style</span>={[styles.base, error &amp;&amp; styles.inputError]}
 <span class="cm">// Se error for falsy (null, undefined, ''), inputError é ignorado</span></code></pre>
 
-    <h3>Optional Chaining (?.) e Nullish Coalescing (||)</h3>
-    <pre><code><span class="kw">const</span> prev = route?.params?.dados || {};
+        <h3>Optional Chaining (?.) e Nullish Coalescing (||)</h3>
+        <pre><code><span class="kw">const</span> prev = route?.params?.dados || {};
 <span class="cm">// route?.params → se route for null/undefined, retorna undefined (sem erro)</span>
 <span class="cm">// ?.dados → se params for null/undefined, retorna undefined</span>
 <span class="cm">// || {} → se o resultado for falsy, usa objeto vazio como fallback</span></code></pre>
 
-    <h3>Spread Operator (...)</h3>
-    <pre><code><span class="cm">// Em objetos: copia todas as propriedades</span>
+        <h3>Spread Operator (...)</h3>
+        <pre><code><span class="cm">// Em objetos: copia todas as propriedades</span>
 <span class="kw">const</span> payload = { ...dadosPasso1, endereco, planos: selecionados };
 <span class="cm">// Resultado: { nome, email, senha, repetirSenha, endereco: {...}, planos: [...] }</span>
 
 <span class="cm">// Em arrays: cria novo array com os itens anteriores + novo</span>
 <span class="kw">const</span> novoArray = [...anterior, novoItem];</code></pre>
 
-    <h3>Array.map() para listas dinâmicas</h3>
-    <pre><code>{PLANOS.<span class="fn">map</span>((plano) => (
+        <h3>Array.map() para listas dinâmicas</h3>
+        <pre><code>{PLANOS.<span class="fn">map</span>((plano) => (
   <span class="tag-name">&lt;Checkbox</span>
     <span class="prop">key</span>={plano}       <span class="cm">// Obrigatório: identifica cada item da lista para o React</span>
     <span class="prop">label</span>={plano}
@@ -1325,125 +1609,187 @@ npx expo start --ios</code></pre>
   <span class="tag-name">/&gt;</span>
 ))}</code></pre>
 
-    <h3>Flexbox no React Native</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>CSS Web</th><th>React Native</th></tr></thead>
-        <tbody>
-          <tr><td><code>flex-direction: row</code> (padrão web)</td><td><code>flexDirection: 'column'</code> (padrão RN)</td></tr>
-          <tr><td>Aceita porcentagens e <code>px</code></td><td>Só aceita números (density-independent pixels)</td></tr>
-          <tr><td><code>display: flex</code> é opt-in</td><td>Todos os elementos já são flex por padrão</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+        <h3>Flexbox no React Native</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>CSS Web</th>
+                <th>React Native</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>flex-direction: row</code> (padrão web)</td>
+                <td><code>flexDirection: 'column'</code> (padrão RN)</td>
+              </tr>
+              <tr>
+                <td>Aceita porcentagens e <code>px</code></td>
+                <td>Só aceita números (density-independent pixels)</td>
+              </tr>
+              <tr>
+                <td><code>display: flex</code> é opt-in</td>
+                <td>Todos os elementos já são flex por padrão</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-  <!-- ─── SEÇÃO 12 ─── -->
-  <section class="section" id="s12">
-    <div class="section-header">
-      <div class="section-num">12</div>
-      <h2>Diagrama geral da arquitetura</h2>
-    </div>
-    <div class="diagram">┌────────────────────────────────────────────┐
-│                  index.js                  │
-│           registerRootComponent            │
-└──────────────────┬─────────────────────────┘
-                   │
-┌──────────────────▼─────────────────────────┐
-│                  App.jsx                   │
-│         SafeAreaProvider                   │
-│         StatusBar                          │
-│         AppNavigator                       │
-└──────────────────┬─────────────────────────┘
-                   │
-┌──────────────────▼─────────────────────────┐
-│             AppNavigator.jsx               │
-│      NavigationContainer (contexto)        │
-│      Stack.Navigator                       │
-│        ├── Login                           │
-│        ├── CadastroPasso1                 │
-│        ├── CadastroPasso2                 │
-│        └── CadastroPasso3                 │
-└──────────┬─────────────────────────────────┘
-           │  (cada rota renderiza uma Screen)
-           │
-┌──────────▼─────────────────────────────────┐
-│              Screens (Telas)               │
-│  ┌─────────────────────────────────────┐   │
-│  │ ScreenContainer (wrapper de todas)  │   │
-│  │  ├── SafeAreaView                   │   │
-│  │  ├── KeyboardAvoidingView           │   │
-│  │  └── ScrollView                     │   │
-│  └─────────────────────────────────────┘   │
-│                                            │
-│  Componentes usados dentro das telas:      │
-│  ┌────────┐ ┌───────┐ ┌──────┐ ┌────────┐ │
-│  │  Logo  │ │ Input │ │Button│ │Checkbox│ │
-│  └────────┘ └───────┘ └──────┘ └────────┘ │
-└───────────────┬────────────────────────────┘
-                │
-┌───────────────▼────────────────────────────┐
-│           Camada de Suporte                │
-│   theme/colors.js  → paleta de cores       │
-│   utils/masks.js   → máscaras e validações │
-└────────────────────────────────────────────┘</div>
+      <!-- ─── SEÇÃO 12 ─── -->
+      <section class="section" id="s12">
+        <div class="section-header">
+          <div class="section-num">12</div>
+          <h2>Diagrama geral da arquitetura</h2>
+        </div>
+        <div class="diagram">┌────────────────────────────────────────────┐
+          │ index.js │
+          │ registerRootComponent │
+          └──────────────────┬─────────────────────────┘
+          │
+          ┌──────────────────▼─────────────────────────┐
+          │ App.jsx │
+          │ SafeAreaProvider │
+          │ StatusBar │
+          │ AppNavigator │
+          └──────────────────┬─────────────────────────┘
+          │
+          ┌──────────────────▼─────────────────────────┐
+          │ AppNavigator.jsx │
+          │ NavigationContainer (contexto) │
+          │ Stack.Navigator │
+          │ ├── Login │
+          │ ├── CadastroPasso1 │
+          │ ├── CadastroPasso2 │
+          │ └── CadastroPasso3 │
+          └──────────┬─────────────────────────────────┘
+          │ (cada rota renderiza uma Screen)
+          │
+          ┌──────────▼─────────────────────────────────┐
+          │ Screens (Telas) │
+          │ ┌─────────────────────────────────────┐ │
+          │ │ ScreenContainer (wrapper de todas) │ │
+          │ │ ├── SafeAreaView │ │
+          │ │ ├── KeyboardAvoidingView │ │
+          │ │ └── ScrollView │ │
+          │ └─────────────────────────────────────┘ │
+          │ │
+          │ Componentes usados dentro das telas: │
+          │ ┌────────┐ ┌───────┐ ┌──────┐ ┌────────┐ │
+          │ │ Logo │ │ Input │ │Button│ │Checkbox│ │
+          │ └────────┘ └───────┘ └──────┘ └────────┘ │
+          └───────────────┬────────────────────────────┘
+          │
+          ┌───────────────▼────────────────────────────┐
+          │ Camada de Suporte │
+          │ theme/colors.js → paleta de cores │
+          │ utils/masks.js → máscaras e validações │
+          └────────────────────────────────────────────┘</div>
 
-    <h3>Resumo dos conceitos por arquivo</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Conceito</th><th>Onde é usado</th></tr></thead>
-        <tbody>
-          <tr><td>Componentes funcionais</td><td>Todos os arquivos .jsx</td></tr>
-          <tr><td>useState (estado local)</td><td>Todas as telas e componentes</td></tr>
-          <tr><td>Props e composição</td><td>Button, Input, Checkbox, Logo, ScreenContainer</td></tr>
-          <tr><td>React Navigation (Stack)</td><td>AppNavigator.jsx</td></tr>
-          <tr><td>Passagem de dados entre telas</td><td>route.params em todas as telas de cadastro</td></tr>
-          <tr><td>Validação de formulário</td><td>handleLogin, validar() em cada tela</td></tr>
-          <tr><td>Máscaras de input</td><td>Input.jsx + MaskInput (CEP e Telefone)</td></tr>
-          <tr><td>Regex para validação</td><td>isValidEmail, isValidCEP, isValidPhone</td></tr>
-          <tr><td>Renderização condicional</td><td>Erros, labels, spinner do botão</td></tr>
-          <tr><td>StyleSheet e Flexbox</td><td>Todos os arquivos</td></tr>
-          <tr><td>Tema centralizado</td><td>theme/colors.js usado por todos</td></tr>
-          <tr><td>SVG em React Native</td><td>Logo.jsx com react-native-svg</td></tr>
-          <tr><td>Safe Area / Keyboard Avoid</td><td>ScreenContainer.jsx</td></tr>
-        </tbody>
-      </table>
-    </div>
+        <h3>Resumo dos conceitos por arquivo</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Conceito</th>
+                <th>Onde é usado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Componentes funcionais</td>
+                <td>Todos os arquivos .jsx</td>
+              </tr>
+              <tr>
+                <td>useState (estado local)</td>
+                <td>Todas as telas e componentes</td>
+              </tr>
+              <tr>
+                <td>Props e composição</td>
+                <td>Button, Input, Checkbox, Logo, ScreenContainer</td>
+              </tr>
+              <tr>
+                <td>React Navigation (Stack)</td>
+                <td>AppNavigator.jsx</td>
+              </tr>
+              <tr>
+                <td>Passagem de dados entre telas</td>
+                <td>route.params em todas as telas de cadastro</td>
+              </tr>
+              <tr>
+                <td>Validação de formulário</td>
+                <td>handleLogin, validar() em cada tela</td>
+              </tr>
+              <tr>
+                <td>Máscaras de input</td>
+                <td>Input.jsx + MaskInput (CEP e Telefone)</td>
+              </tr>
+              <tr>
+                <td>Regex para validação</td>
+                <td>isValidEmail, isValidCEP, isValidPhone</td>
+              </tr>
+              <tr>
+                <td>Renderização condicional</td>
+                <td>Erros, labels, spinner do botão</td>
+              </tr>
+              <tr>
+                <td>StyleSheet e Flexbox</td>
+                <td>Todos os arquivos</td>
+              </tr>
+              <tr>
+                <td>Tema centralizado</td>
+                <td>theme/colors.js usado por todos</td>
+              </tr>
+              <tr>
+                <td>SVG em React Native</td>
+                <td>Logo.jsx com react-native-svg</td>
+              </tr>
+              <tr>
+                <td>Safe Area / Keyboard Avoid</td>
+                <td>ScreenContainer.jsx</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <div class="callout tip">
-      <span class="callout-icon">🚀</span>
-      <div>
-        <strong>Próximos passos sugeridos para evoluir o projeto:</strong>
-        <ul style="margin-top:8px">
-          <li>Integrar com uma API real (fetch/axios) nos pontos marcados com comentários</li>
-          <li>Adicionar <code>AsyncStorage</code> para manter o usuário logado</li>
-          <li>Implementar <strong>Context API</strong> para gerenciar o estado do usuário autenticado</li>
-          <li>Adicionar tratamento de erros de rede (try/catch, estados de loading)</li>
-          <li>Criar uma tela <strong>Home</strong> para usuários logados</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-https://youtu.be/zRRqyimj1cg?si=5tr-dbDtP7TFml9i
-</main>
-</div>
+        <!-- <div class="callout tip">
+          <span class="callout-icon">🚀</span>
+          <div>
+            <strong>Próximos passos sugeridos para evoluir o projeto:</strong>
+            <ul style="margin-top:8px">
+              <li>Integrar com uma API real (fetch/axios) nos pontos marcados com comentários</li>
+              <li>Adicionar <code>AsyncStorage</code> para manter o usuário logado</li>
+              <li>Implementar <strong>Context API</strong> para gerenciar o estado do usuário autenticado</li>
+              <li>Adicionar tratamento de erros de rede (try/catch, estados de loading)</li>
+              <li>Criar uma tela <strong>Home</strong> para usuários logados</li>
+            </ul>
+          </div>
+        </div> -->
+      </section>
 
-<script>
-  // Highlight de link ativo na sidebar conforme scroll
-  const links = document.querySelectorAll('.sidebar nav a');
-  const sections = [...links].map(l => document.querySelector(l.getAttribute('href')));
+    </main>
+  </div>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/QmtkD6aKFBQ?si=HPNqLm3DO_s50-Zb"
+    title="YouTube video player" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <script>
+    // Highlight de link ativo na sidebar conforme scroll
+    const links = document.querySelectorAll('.sidebar nav a');
+    const sections = [...links].map(l => document.querySelector(l.getAttribute('href')));
 
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        links.forEach(l => l.classList.remove('active'));
-        const active = [...links].find(l => l.getAttribute('href') === '#' + e.target.id);
-        if (active) active.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-30% 0px -60% 0px' });
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const active = [...links].find(l => l.getAttribute('href') === '#' + e.target.id);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
 
-  sections.forEach(s => s && obs.observe(s));
-</script>
+    sections.forEach(s => s && obs.observe(s));
+  </script>
 </body>
+
 </html>
